@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { Container, SectionHeading } from "@/components/ui";
+import { retention } from "@/content/policies";
 
 const faqs: { q: string; a: React.ReactNode }[] = [
   {
@@ -37,8 +38,8 @@ const faqs: { q: string; a: React.ReactNode }[] = [
     q: "How do you handle our data?",
     a: (
       <>
-        We aim to collect only what the audit needs. Confidentiality, retention, and deletion terms
-        are agreed in writing with each client before work begins. Read the{" "}
+        We aim to collect only what the audit needs. {retention.short}{" "}
+        Read the{" "}
         <Link href="/data-handling" className="underline underline-offset-4">
           client data handling
         </Link>{" "}

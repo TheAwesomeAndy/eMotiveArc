@@ -6,8 +6,9 @@
  *
  * 1. Put the two approved PDFs in /public/sample/ using the file names below.
  *    The download buttons switch on automatically at the next build.
- * 2. Optionally fill in `excerpt` with a short, approved passage copied from
- *    the report. Leave it as `null` to keep the excerpt block hidden.
+ * 2. Fill in `excerpt` with the approved F01 coaching-continuity example,
+ *    copied word for word from the approved report. Leave it as `null` to
+ *    keep the excerpt block hidden on the live site.
  *
  * Do not paraphrase or invent findings. Copy only approved wording.
  */
@@ -26,6 +27,8 @@ export const sampleFiles = {
 } as const;
 
 export type SampleExcerpt = {
+  /** Finding identifier used in the report, e.g. "F01". */
+  findingId: string;
   /** The scenario in a sentence, e.g. what happened earlier. */
   setup: string;
   /** Short quoted line(s) from the earlier interaction. */
@@ -43,5 +46,8 @@ export const sampleAudit = {
   source: "MotiveLab audit-1.1",
   disclosure:
     "This demonstration ran against a real language model. Its findings were reviewed by an AI assistant, not by an independent human reviewer. Paid audits include human expert review.",
+  /** The homepage excerpt must be the approved F01 coaching-continuity example. */
+  excerptFindingId: "F01",
+  excerptTopic: "coaching continuity",
   excerpt: null as SampleExcerpt | null,
 } as const;

@@ -107,6 +107,9 @@ export function validateInquiry(fields: InquiryFields): InquiryErrors {
   if (!(fields.nextStep in NEXT_STEPS))
     errors.nextStep = "Please choose a next step.";
 
+  // Credentials override any other error on the same field.
+  for (const key of fieldsWithSecrets(fields)) errors[key] = SECRET_ERROR;
+
   return errors;
 }
 
@@ -115,10 +118,42 @@ export function isFreeMail(email: string): boolean {
   return domain ? FREE_MAIL.has(domain) : false;
 }
 
-/** Rough check for secrets pasted into the description. */
+/**
+ * Recognizable credential formats. Matching text is rejected in the browser
+ * and again on the server, before anything is delivered or logged.
+ * Patterns are deliberately specific to avoid flagging ordinary prose.
+ */
+const SECRET_PATTERNS: { label: string; re: RegExp }[] = [
+  { label: "Anthropic API key", re: /\bsk-ant-[A-Za-z0-9_-]{16,}/ },
+  { label: "OpenAI-style API key", re: /\bsk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{20,}/ },
+  { label: "Stripe secret key", re: /\b(?:sk|rk)_(?:live|test)_[A-Za-z0-9]{16,}/ },
+  { label: "AWS access key", re: /\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/ },
+  { label: "GitHub token", re: /\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,})/ },
+  { label: "Slack token", re: /\bxox[abprs]-[A-Za-z0-9-]{10,}/ },
+  { label: "Google API key", re: /\bAIza[0-9A-Za-z_-]{35}\b/ },
+  { label: "Resend API key", re: /\bre_[A-Za-z0-9]{8,}_[A-Za-z0-9]{16,}/ },
+  { label: "Hugging Face token", re: /\bhf_[A-Za-z0-9]{30,}/ },
+  { label: "private key", re: /-----BEGIN (?:[A-Z]+ )?PRIVATE KEY-----/ },
+  { label: "JSON web token", re: /\beyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/ },
+];
+
+/** Returns the kind of credential found, or null. Never returns the match. */
+export function findSecret(text: string): string | null {
+  for (const { label, re } of SECRET_PATTERNS) if (re.test(text)) return label;
+  return null;
+}
+
 export function looksLikeSecret(text: string): boolean {
-  return /\b(sk-[A-Za-z0-9_-]{16,}|sk-ant-[A-Za-z0-9_-]{16,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{30,}|xox[abprs]-[A-Za-z0-9-]{10,})\b/.test(
-    text,
+  return findSecret(text) !== null;
+}
+
+export const SECRET_ERROR =
+  "This looks like it contains an API key or other credential. Please remove it. We never need credentials through this form.";
+
+/** Field names (never values) that contain a recognizable credential. */
+export function fieldsWithSecrets(fields: InquiryFields): (keyof InquiryFields)[] {
+  return (Object.keys(fields) as (keyof InquiryFields)[]).filter((k) =>
+    looksLikeSecret(fields[k]),
   );
 }
 

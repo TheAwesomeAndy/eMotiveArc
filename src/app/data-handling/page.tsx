@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Check, Clock3 } from "lucide-react";
 import { DraftNotice, PageHeader, Prose } from "@/components/page-header";
-import { Container } from "@/components/ui";
+import { Container, StatusTag } from "@/components/ui";
+import { retention } from "@/content/policies";
 
 export const metadata: Metadata = {
   title: "Client Data Handling",
@@ -18,7 +19,7 @@ const inPlace = [
 ];
 
 const proposed = [
-  "A 90-day retention period for client audit materials after the final report or retest.",
+  retention.statement,
   "A documented deletion procedure, with confirmation on request.",
   "Written confidentiality and data-processing terms for each engagement.",
 ];
@@ -59,10 +60,10 @@ export default function DataHandlingPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-5 text-sm leading-relaxed text-muted">
-              We don&apos;t yet offer automated deletion. We&apos;ll only commit to a retention
-              period once the deletion procedure and contract terms are finalized and approved.
-            </p>
+            <p className="mt-5 text-sm leading-relaxed text-muted">{retention.limits}</p>
+            <StatusTag tone="signal" className="mt-5">
+              {retention.approvalStatus}
+            </StatusTag>
           </div>
         </div>
 

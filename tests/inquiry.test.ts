@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  SECRET_ERROR,
+  findSecret,
   isFreeMail,
   looksLikeSecret,
   normalizeWebsite,
@@ -54,4 +56,37 @@ test("flags free-mail domains and pasted secrets", () => {
   assert.equal(isFreeMail("someone@studio.example"), false);
   assert.equal(looksLikeSecret("my key is sk-ant-abcdefghijklmnopqrstuv"), true);
   assert.equal(looksLikeSecret("no secrets here"), false);
+});
+
+test("detects common credential formats", () => {
+  const samples = [
+    "sk-ant-api03-abcdefghijklmnopqrstuvwxyz012345",
+    "sk-proj-abcdefghijklmnopqrstuvwxyz0123456789",
+    "AKIAIOSFODNN7EXAMPLE",
+    "ghp_abcdefghijklmnopqrstuvwxyz0123456789",
+    "github_pat_11ABCDEFG0123456789_abcdefghijklmnopqrstuv",
+    "xoxb-1234567890-abcdefghij",
+    "AIzaSyA1234567890abcdefghijklmnopqrstuv",
+    "sk_live_abcdefghijklmnop1234",
+    "re_abc12345_abcdefghijklmnopqrstuv",
+    "hf_abcdefghijklmnopqrstuvwxyz0123456789",
+    "-----BEGIN RSA PRIVATE KEY-----",
+    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abcdefghijklmnop",
+  ];
+  for (const s of samples) assert.notEqual(findSecret(`here: ${s}`), null, s);
+});
+
+test("does not flag ordinary product descriptions", () => {
+  const prose = [
+    "Our risk-averse companion asks the user to re-explain the task-oriented plan.",
+    "We use RAG with summaries every 20 turns. The NPC forgets an apology after a break.",
+    "Our skill-based roleplay game has a coaching character who loses track of progress.",
+  ];
+  for (const s of prose) assert.equal(findSecret(s), null, s);
+});
+
+test("validator rejects a credential in any field with a clear message", () => {
+  const key = "sk-ant-api03-abcdefghijklmnopqrstuvwxyz012345";
+  assert.equal(validateInquiry({ ...valid, message: `Our key is ${key} thanks` }).message, SECRET_ERROR);
+  assert.equal(validateInquiry({ ...valid, company: key }).company, SECRET_ERROR);
 });

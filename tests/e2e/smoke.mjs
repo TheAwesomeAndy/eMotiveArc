@@ -97,6 +97,8 @@ for (const vp of [
 {
   const page = await browser.newPage();
   await page.goto(BASE + "/contact?next=discovery", { waitUntil: "networkidle" });
+  const previewBanner = await page.getByText("Preview mode.", { exact: false }).count();
+  console.log(`INFO  delivery banner present: ${previewBanner > 0} (expected only when no provider is configured)`);
   check(
     await page.locator('input[name="nextStep"][value="discovery"]').isChecked(),
     "?next=discovery preselects the discovery option",
@@ -122,11 +124,35 @@ for (const vp of [
   const preview = text.includes("preview mode");
   check(preview || text.includes("received"), `submission shows an explicit outcome: "${text.slice(0, 80)}…"`);
   if (preview) {
+    check(previewBanner > 0, "preview warning was shown before submitting");
     check(
       (await page.inputValue('textarea[name="message"]')).length > 0,
       "preview mode keeps the visitor's text",
     );
   }
+  await page.close();
+}
+
+// 4b. A pasted credential is blocked in the browser and never submitted.
+{
+  const page = await browser.newPage();
+  let actionPosts = 0;
+  page.on("request", (r) => r.method() === "POST" && actionPosts++);
+  await page.goto(BASE + "/contact", { waitUntil: "networkidle" });
+  await page.fill('input[name="name"]', "Key Paster");
+  await page.fill('input[name="email"]', "keys@studio.example");
+  await page.fill(
+    'textarea[name="message"]',
+    "Here is our key sk-ant-api03-abcdefghijklmnopqrstuvwxyz012345 for the test build.",
+  );
+  check(await page.getByText("This looks like it may contain an API key").isVisible(), "live credential warning appears");
+  await page.waitForTimeout(3200);
+  await page.getByRole("button", { name: /Send audit inquiry/ }).click();
+  check(
+    await page.getByText("This looks like it contains an API key or other credential").isVisible(),
+    "credential blocks submission with a clear error",
+  );
+  check(actionPosts === 0, `credential was not sent to the server (${actionPosts} POSTs)`);
   await page.close();
 }
 

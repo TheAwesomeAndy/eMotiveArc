@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --test --experimental-strip-types tests/*.test.mts",
+    "test": "node --conditions=react-server --import tsx --test tests/*.test.ts",
     "test:e2e": "node tests/e2e/smoke.mjs",
     "check": "npm run lint && npm run typecheck && npm test && npm run build"
   },
@@ -31,6 +31,7 @@
     "eslint-config-next": "16.4.2",
     "playwright-core": "1.56",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

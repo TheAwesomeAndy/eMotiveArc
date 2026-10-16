@@ -18,10 +18,11 @@ export function SampleExcerpt() {
           Placeholder · preview only
         </p>
         <p className="mt-3">
-          The approved Captain Ivy Marlow excerpt goes here: the setup, a short earlier and later
-          exchange, and the reviewed finding. Copy the wording from the approved audit-1.1 report
-          into <code className="font-mono text-[0.8rem]">src/content/sample-audit.ts</code>. Nothing
-          is shown on the live site until it&apos;s filled in.
+          Missing asset: the approved {sampleAudit.excerptFindingId} {sampleAudit.excerptTopic}{" "}
+          example from the Captain Ivy Marlow audit-1.1 report (setup, the earlier and later
+          exchange, and the reviewed finding). Copy it word for word into{" "}
+          <code className="font-mono text-[0.8rem]">src/content/sample-audit.ts</code>. Nothing is
+          shown on the live site until it&apos;s filled in.
         </p>
       </div>
     );
@@ -57,7 +58,8 @@ export function SampleExcerpt() {
         <Quote className="mt-1 size-5 shrink-0 text-arc-bright" aria-hidden />
         <div>
           <p className="font-mono text-[0.7rem] tracking-[0.14em] text-arc-bright uppercase">
-            Finding{ex.priority ? ` · ${ex.priority}` : ""}
+            Finding {ex.findingId}
+            {ex.priority ? ` · ${ex.priority}` : ""}
           </p>
           <p className="mt-2 leading-relaxed text-paper/85">{ex.finding}</p>
         </div>

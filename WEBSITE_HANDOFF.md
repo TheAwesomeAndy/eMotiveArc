@@ -10,13 +10,13 @@ the claims below is in this repository. Nothing depends on the Claude Code conve
 | | |
 | --- | --- |
 | Date | 2026-10-16 |
-| Milestone | Revision 5: emotional-continuity positioning correction (content only) |
+| Milestone | Revision 6: full-spectrum copy patch from Arc's revision 5 review (content only). Builds on revision 5 |
 | Repository | https://github.com/TheAwesomeAndy/eMotiveArc |
 | Branch | `claude/emotivearc-website-launch-4dcl0p` |
-| Reviewed code commit | `f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e` |
+| Reviewed code commit | `b96641d6366ab7a4470807e87395672406c99f72` |
 | Handoff commit | The commit that adds this file version (documentation only) |
-| Previous reviewed commit | `9616fbd30628df48b0d2973c775db87a84cd28bf` (code at `c8b498f`) |
-| Diff since last review | https://github.com/TheAwesomeAndy/eMotiveArc/compare/9616fbd30628df48b0d2973c775db87a84cd28bf...f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e |
+| Previous reviewed commit | `d98a6c27913676377fcfd02c341cf4ef2591360b` (code at `f4fc81d`, revision 5) |
+| Diff since last review | https://github.com/TheAwesomeAndy/eMotiveArc/compare/d98a6c27913676377fcfd02c341cf4ef2591360b...b96641d6366ab7a4470807e87395672406c99f72 |
 | Authorization | [Issue #1](https://github.com/TheAwesomeAndy/eMotiveArc/issues/1): $0 password-protected staging only. No public launch |
 | Current state | Staging-ready. **Live Netlify staging is still not verified by engineering** (C). Not production-ready |
 
@@ -39,6 +39,26 @@ visual identity, inquiry handling, the access gate, the PDFs or the F01 evidence
 ---
 
 ## B. Work completed
+
+### Revision 6 patch (`b96641d`)
+
+Arc approved revision 5 in principle and asked for one copy patch: **full spectrum means
+expansion, not removal.**
+
+| Area | Change |
+| --- | --- |
+| What we evaluate | New compact row, "Scenarios can draw on experiences such as": Joy, Pride, Love, Trust, Encouragement, **Desire**, Grief, Anger, Betrayal, **Shame**, **Embarrassment**, **Humiliation**, Conflict and repair, Resilience. Followed by: "Positive, negative and mixed, alone or in sequence. We test what these experiences observably change in later behavior. We don't claim the character feels them." No single emotion organizes the section |
+| Romance & Intimacy | "Attraction and anticipation" became **"Attraction, desire and anticipation"** ("whether attraction and erotic desire build, hold, or fade believably"). The tone card became **"Shame, embarrassment, humiliation"** ("leave believable, distinct traces… tell playful teasing from a moment that needs care"). The lede adds: "Desire, intimacy, shame, embarrassment and humiliation are distinct experiences. They can occur together or apart, and a coherent character shouldn't treat them as one." The offline-fixtures status box is unchanged |
+| The Problem | "Loss is recalled, not felt" became **"Loss is recalled without its significance"**, so nothing implies subjective model feeling |
+| Hero caption | Adds "One possible trajectory, for illustration: repair doesn't always restore trust." |
+| Level 3 contrast | "A coherent character might agree in both cases…" became "Level 3 examines **when** histories like these should lead to meaningfully different later behavior, and whether they do. It doesn't assume that every difference in history must show up." |
+| e2e | New checks: the range row includes Joy, Grief, Shame, Humiliation, Desire and Resilience; Romance names erotic desire; "not felt" wording is gone |
+
+The hero and the six Problem cards are **not** reverted to embarrassment, nothing invented,
+no founder-private material. `public/sample/` and `src/content/sample-audit.ts` are
+unchanged since revision 5.
+
+### Revision 5 record (`f4fc81d`), still in force except as amended above
 
 All copy below is **illustrative**, written by engineering to explain the problem space.
 None of it is an audit result. None uses the founder's private fictional characters,
@@ -73,7 +93,7 @@ engineering. Unblock steps, unchanged: in this Claude Code environment's setting
 environment variable `E2E_BASIC_AUTH=<user>:<password>`. Then engineering runs
 `BASE_URL=https://sensational-cranachan-560be5.netlify.app npm run test:e2e`.
 
-### Local production build, run at `f4fc81d`
+### Local production build, run at `b96641d`
 
 Linux, Node 22.22.0, Chromium 141.0.7390.37 headless.
 
@@ -83,8 +103,8 @@ Linux, Node 22.22.0, Chromium 141.0.7390.37 headless.
 | `npm run typecheck` | Pass |
 | `npm test` | **28 passed, 0 failed** |
 | `npm run build` | Pass |
-| `npm run test:e2e` (open server) | **120 passed, 0 failed** |
-| `npm run test:e2e` (`STAGING_ACCESS_PASSWORD` set, `E2E_BASIC_AUTH`) | **122 passed, 0 failed** |
+| `npm run test:e2e` (open server) | **128 passed, 0 failed** |
+| `npm run test:e2e` (`STAGING_ACCESS_PASSWORD` set, `E2E_BASIC_AUTH`) | **130 passed, 0 failed** |
 | Server-log leak scan after both runs | 0 |
 
 Includes axe (0 serious or critical), layouts at 1440 and 390 with no overflow, the
@@ -98,7 +118,7 @@ needed one mobile wrapping fix, which is included.
 ### Reproduce
 
 ```bash
-git checkout f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e
+git checkout b96641d6366ab7a4470807e87395672406c99f72
 npm ci && npm run check
 npm start &   BASE_URL=http://localhost:3000 npm run test:e2e
 git diff --stat 9616fbd -- public/sample/      # empty: PDFs unchanged
@@ -193,16 +213,21 @@ marketing), and the `npm audit` dev-tool advisories.
 
 ## G. Questions for ChatGPT
 
-1. Do the revised hero, Problem, Evaluate, Romance and Research copy now represent the
-   central research question (believable, character-specific consequences and
-   transformations of earlier emotional and interpersonal experience) without implying
-   validated results?
-2. Is the Evaluate probe about different histories (D2) acceptable, given Level 3 is
-   unvalidated? Or should it move entirely to the Research section?
-3. Is the F01 scope note sufficient, or should the sample move off the homepage until an
-   emotional-continuity example has been rigorously reviewed?
-4. Is the revision 4 blocker list (section E) still complete? It's unchanged by this
-   revision.
+1. Does the revision 6 patch satisfy "expansion, not removal" without making shame,
+   embarrassment, humiliation or desire the company's identity?
+2. Is "We don't claim the character feels them" placed and worded adequately in the
+   Evaluate section?
+
+Per Arc's instruction, no further positioning iteration is planned after this patch.
+Remaining work is the commercial blocker list in section E and live staging verification.
+
+**Netlify reminder:** verify the **stable** URL, not an old hash-prefixed deploy URL,
+shows commit `b96641d` or later, using Netlify's deploy list. Engineering still can't
+reach Netlify from this environment (section C).
+
+**Not done, per Arc's priority guidance:** the print/PDF-export contrast issue Arc noted
+(scroll-reveal content and dark sections washing out in "Print to PDF"). It isn't an
+on-screen defect. A small `@media print` rule can be added on request.
 
 ---
 

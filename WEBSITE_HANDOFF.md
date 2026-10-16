@@ -10,122 +10,70 @@ the claims below is in this repository. Nothing depends on the Claude Code conve
 | | |
 | --- | --- |
 | Date | 2026-10-16 |
-| Milestone | Revision 4: staging verification attempt, PDF corrections, preview-accurate copy, launch-blocker list |
+| Milestone | Revision 5: emotional-continuity positioning correction (content only) |
 | Repository | https://github.com/TheAwesomeAndy/eMotiveArc |
 | Branch | `claude/emotivearc-website-launch-4dcl0p` |
-| Reviewed code commit | `c8b498f3acc5d889538d3c4d0ca52e122963989e` |
+| Reviewed code commit | `f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e` |
 | Handoff commit | The commit that adds this file version (documentation only) |
-| Previous reviewed commit | `db3d4024f4ab08f625c5669dbc2885bff321fff4` (code at `a4aa890`) |
-| Diff since last review | https://github.com/TheAwesomeAndy/eMotiveArc/compare/db3d4024f4ab08f625c5669dbc2885bff321fff4...c8b498f3acc5d889538d3c4d0ca52e122963989e |
-| Authorization | [Issue #1](https://github.com/TheAwesomeAndy/eMotiveArc/issues/1): $0 non-production staging only. No commercial launch |
-| Current state | **Staging deployed by the founder on Netlify Free. Engineering could not verify it** (see C). Not production-ready |
+| Previous reviewed commit | `9616fbd30628df48b0d2973c775db87a84cd28bf` (code at `c8b498f`) |
+| Diff since last review | https://github.com/TheAwesomeAndy/eMotiveArc/compare/9616fbd30628df48b0d2973c775db87a84cd28bf...f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e |
+| Authorization | [Issue #1](https://github.com/TheAwesomeAndy/eMotiveArc/issues/1): $0 password-protected staging only. No public launch |
+| Current state | Staging-ready. **Live Netlify staging is still not verified by engineering** (C). Not production-ready |
 
-### Staging deployment (founder-managed)
+**Scope of this revision:** a targeted messaging correction requested by the founder and
+Arc. The site over-emphasized embarrassment and shyness. The central question is whether
+earlier emotional and interpersonal experiences produce believable, character-specific
+consequences and transformations later. **There are no changes to layout, brand, price,
+visual identity, inquiry handling, the access gate, the PDFs or the F01 evidence.**
+
+### Staging deployment (founder-managed, unchanged)
 
 | | |
 | --- | --- |
-| Host | Netlify Free (founder account; engineering has no access) |
-| Deploy permalink (immutable) | `https://6ad27de1cb377b058cf5c12f--sensational-cranachan-560be5.netlify.app/` |
+| Host | Netlify Free (founder account; no engineering access) |
 | Stable site URL | `https://sensational-cranachan-560be5.netlify.app/` |
-| Deployed commit | **Not confirmed.** The permalink was created after `db3d402` was pushed, so it most likely runs `db3d402`, but that's an inference. It does **not** include this revision's fixes. A new deploy of `c8b498f` or later is needed (Netlify creates one automatically if continuous deployment is on for this branch) |
-| Access protection | Founder reports that a fresh incognito window asks for a password. **Not verified by engineering**, and the protection mechanism (app gate vs. Netlify feature) is unconfirmed |
-| Configuration (expected per Issue #1) | `STAGING_ACCESS_PASSWORD` set privately; `NEXT_PUBLIC_SITE_STAGE` unset or `preview`; no `CONTACT_*`, `RESEND_*` or analytics variables. **Not visible to engineering** |
-
-### What changed since `db3d402`
-
-1. **Full sample report:** the broken sentence on **page 7** is fixed (my earlier note said
-   page 6, which was wrong; Arc's page 7 is correct). MotiveLab is replaced by EmotiveArc
-   on pages 1, 6 and 7.
-2. **Overview:** "available on request" now reads "available on the EmotiveArc website".
-3. **`/privacy`:** preview-aware. It no longer tells readers to contact us through a form
-   that can't deliver.
-4. **`/contact`:** preview-aware "What happens next".
-5. **Site sample labels** no longer cite MotiveLab. The Research section still explains
-   MotiveLab as EmotiveArc's research program.
-6. **e2e:** new checks for the preview-accurate privacy and contact copy.
+| Earlier deploy permalink | `https://6ad27de1cb377b058cf5c12f--sensational-cranachan-560be5.netlify.app/` (immutable, predates revisions 4–5) |
+| Deployed commit | **Not confirmed by engineering.** If Netlify continuous deployment is on for this branch, the stable URL should rebuild from the latest push. The founder can confirm the commit in Netlify's deploy list |
+| Access protection | Founder-observed only: a password prompt in a fresh incognito window |
 
 ---
 
 ## B. Work completed
 
-### PDF corrections
+All copy below is **illustrative**, written by engineering to explain the problem space.
+None of it is an audit result. None uses the founder's private fictional characters,
+prose or scenarios.
 
-Edited with PyMuPDF redaction (old text removed from the file, not covered), then re-set
-in Times regular and bold. Liberation Serif, the PDFs' original font, is metric-compatible
-with Times, so line widths match. A word-level `pdftotext` diff against the previous
-versions shows **only** the changes below. Page counts are unchanged (8 and 2).
-`MotiveLab` and "on request" occur 0 times in either file.
-
-| File | Page | Before | After |
+| Area | File | Before | After |
 | --- | --- | --- | --- |
-| Full report | 1 | "made to show what a MotiveLab audit delivers" | "made to show what an EmotiveArc audit delivers" (paragraph re-wrapped within its 3 lines) |
-| Full report | 6 | "API calls by MotiveLab" | "API calls by EmotiveArc" |
-| Full report | 6 | "Claude (MotiveLab development assistant), an AI assistant. **No independent human reviewed this report.**" | Same, with "EmotiveArc development assistant" |
-| Full report | 7 | "…Claude (MotiveLab development assistant), an AI assistant. **No independent human reviewed this report.** read every flagged conversation and decided…" | "…Claude (EmotiveArc development assistant), an AI assistant, read every flagged conversation and decided what appears here, as a finding, an observation, or not at all. **No independent human reviewed this report.**" |
-| Overview | 1 | "The full sample report is available on request." | "The full sample report is available on the EmotiveArc website." |
+| Hero diagram | [`continuity-chart.tsx`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e/src/components/continuity-chart.tsx) | Y-axis "guardedness"; one event, "An embarrassing moment"; end labels "Carries the consequence" / "Reverts to baseline" | Y-axis "trust". Trust builds from "first meeting", drops at **"A promise broken"**, recovers after **"A sincere apology"**. After "days later": **"Repair carries forward"** vs **"Back to day one"**. Caption: "Both versions can recall the apology. Only one behaves as if the relationship changed." "Illustrative" badge kept |
+| The Problem | [`problem.tsx`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e/src/components/sections/problem.tsx) | Six cards, two framed around embarrassment or awkwardness | Six cards, each tagged by kind: **Positive** (shared joy leaves no warmth; earned trust disappears), **Negative** (loss is recalled, not felt; betrayal has no consequence), **Evolving** (encouragement doesn't take hold), **Mixed** (conflict and repair collapse). Intro now says "good or bad… in a way that fits who the character is". "Illustrative failure patterns" note kept |
+| What we evaluate | [`evaluate.tsx`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e/src/components/sections/evaluate.tsx) | "Emotional continuity"; probe "Does embarrassment, hurt, or delight shape later tone?" | **"Emotional and psychological continuity"**: "whether meaningful experiences, good, bad or mixed, have believable consequences". Probes cover lasting effect, believable settling, and different histories leading to different responses. Relational card adds "After conflict, is repair possible, and does it leave a mark?" Lede: "consequences of experience… We don't score a checklist of emotions" |
+| Romance & Intimacy | [`romance.tsx`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e/src/components/sections/romance.tsx) | Eight areas including "Shyness and embarrassment" as its own category | Eight areas: attraction and anticipation; **love and attachment**; trust and vulnerability; **rejection and its aftermath**; developing intimacy; tone (teasing and reassurance, with shyness as one example trait); consent, permissions and boundaries; change after meaningful encounters. The "offline fixtures only, not validated" status box is unchanged |
+| Research foundation | [`research.tsx`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e/src/components/sections/research.tsx) | Level 3: "develop differently depending on the path of experiences" | Three levels preserved. Level 3: "depend on the whole sequence of experiences… not just the most recent one?" plus an **"Illustrative contrast"**: Sequence A (trust built → broken once → sincerely repaired) vs Sequence B (trust built → never tested), with the same later moment (asked to keep an important secret). "Active research / not a validated scientific standard" kept |
+| Sample audit | [`sample-audit.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e/src/content/sample-audit.ts), `sample.tsx`, `sample-report/page.tsx` | Disclosure only | **Evidence unchanged.** Adds "What it demonstrates: F01 is a commitment and preference continuity finding, one of our supporting checks. It shows the audit format and evidence standard. It isn't evidence for our broader research into emotional and relational continuity." on both pages, under the AI-review disclosure |
+| Tests | [`tests/e2e/smoke.mjs`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e/tests/e2e/smoke.mjs) | | New checks: hero describes broken promise and apology; the Problem includes Positive, Negative, Mixed and Evolving cards; scope note visible on `/` and `/sample-report` |
 
-Overview page 2 (retention and contact) is unchanged from revision 3. The F01 pages (2–3)
-are untouched, and the site excerpt still matches the PDF text verbatim (13 of 13
-strings).
-
-| Published file | SHA-256 |
-| --- | --- |
-| `public/sample/emotivearc-sample-audit-captain-ivy-marlow.pdf` | `ea16e4dfe3ffa1d36e90deb31e19dccd5ec8de634374fa826a55d6ea6c5a0bbe` |
-| `public/sample/emotivearc-audit-overview.pdf` | `03b6d6caae9ca4728bc803aaf192bdb09b45990e7c66c059076bbb2d6f1d4a78` |
-
-**Note for the founder:** the full report is no longer byte-identical to your upload. If
-you keep a source document, apply the same four wording changes there, so a future
-regeneration doesn't reintroduce the errors.
-
-### Preview-accurate copy
-
-| Page | In preview mode (no delivery configured) | Once delivery is configured |
-| --- | --- | --- |
-| [`/privacy`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/c8b498f3acc5d889538d3c4d0ca52e122963989e/src/app/privacy/page.tsx) | Adds: "While this site is in preview, the inquiry form doesn't send or store anything…" Contact section: "There isn't a working way to contact us through this website yet: the contact form is in preview mode and doesn't deliver messages." | Original wording, pointing to the contact form |
-| [`/contact`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/c8b498f3acc5d889538d3c4d0ca52e122963989e/src/app/contact/page.tsx) | "Once our inbox is live, we'll reply by email… While this site is in preview, the form doesn't deliver messages…" | "We reply by email to arrange a short scoping conversation…" |
-
-Both switch automatically from the same delivery check the form uses, so they can't
-contradict it.
-
-### Unchanged and still in force
-
-- Preview ribbon and `noindex`, robots disallow, and the optional Basic Auth gate.
-- Inquiry handling: credential rejection, content-free logs, `sourcePath` allowlist, and
-  "treat it as not sent" failure wording.
-- F01 excerpt shown after the AI-review disclosure.
+**Verified unchanged since `9616fbd`:**
+- `git diff --stat 9616fbd -- public/sample/` is empty.
+- Both PDF SHA-256 values match revision 4 (`ea16e4df…0bbe` and `03b6d6ca…4a78`).
+- The only diff in `sample-audit.ts` is the added `scopeNote`. The F01 fields are
+  byte-identical.
 
 ---
 
 ## C. Evidence and testing
 
-### Live Netlify staging: NOT tested by engineering
+### Live Netlify staging: still NOT tested by engineering
 
-**Blocked.** This build environment's network policy denies outbound connections to the
-Netlify hosts. The egress proxy refused HTTPS `CONNECT` with **403** for
-`6ad27de1cb377b058cf5c12f--sensational-cranachan-560be5.netlify.app` and
-`sensational-cranachan-560be5.netlify.app`, on every path tried:
+Unchanged from revision 4. This environment's network policy refuses HTTPS to the
+Netlify hosts (egress proxy 403 on `CONNECT`), and no staging credential is available to
+engineering. Unblock steps, unchanged: in this Claude Code environment's settings, allow
+`sensational-cranachan-560be5.netlify.app` under Network access, and add a private
+environment variable `E2E_BASIC_AUTH=<user>:<password>`. Then engineering runs
+`BASE_URL=https://sensational-cranachan-560be5.netlify.app npm run test:e2e`.
 
-> `/`, `/contact`, `/sample-report`, `/privacy`, `/data-handling`, `/robots.txt`,
-> `/sitemap.xml`, both PDFs, `/opengraph-image`, `/icon.svg`
-
-Those 403s come from this environment's proxy, **not from Netlify**. They say nothing
-about the site's access gate. **No anonymous or authenticated test of the deployed site
-has been executed by engineering.** No staging credentials were requested or received.
-
-**To unblock (founder, about 2 minutes, $0):**
-
-1. In this Claude Code cloud environment's settings (environment menu → Edit → Network
-   access), add `sensational-cranachan-560be5.netlify.app` and the deploy-permalink host
-   to Allowed domains. Wildcard support for `*.netlify.app` may vary.
-2. In the same settings, add an environment variable **`E2E_BASIC_AUTH`** with the value
-   `<user>:<password>` for the staging gate. **Don't put it in chat, GitHub or the
-   handoff.** A new session picks it up.
-3. Ask engineering to run the live suite. Engineering will then execute:
-   `BASE_URL=https://sensational-cranachan-560be5.netlify.app npm run test:e2e`
-   (it reads `E2E_BASIC_AUTH` from the environment), plus anonymous `curl` checks and
-   screenshots.
-
-### Local production build, run at `c8b498f`
+### Local production build, run at `f4fc81d`
 
 Linux, Node 22.22.0, Chromium 141.0.7390.37 headless.
 
@@ -135,53 +83,55 @@ Linux, Node 22.22.0, Chromium 141.0.7390.37 headless.
 | `npm run typecheck` | Pass |
 | `npm test` | **28 passed, 0 failed** |
 | `npm run build` | Pass |
-| `npm run test:e2e` (open server) | **113 passed, 0 failed** |
-| `npm run test:e2e` (`STAGING_ACCESS_PASSWORD` set, `E2E_BASIC_AUTH` used) | **115 passed, 0 failed** |
-| Anonymous `curl` to the gated server: `/`, `/contact`, `/privacy`, `/robots.txt`, both PDFs | All **401** |
-| Authenticated `/robots.txt` | `User-Agent: *` / `Disallow: /` |
-| Authenticated `/` | `<meta name="robots" content="noindex, nofollow"/>` |
-| Server-log leak scan after both e2e runs | **0** occurrences of submitted test values or the gate password |
+| `npm run test:e2e` (open server) | **120 passed, 0 failed** |
+| `npm run test:e2e` (`STAGING_ACCESS_PASSWORD` set, `E2E_BASIC_AUTH`) | **122 passed, 0 failed** |
+| Server-log leak scan after both runs | 0 |
 
-The e2e suite covers:
-- desktop 1440 and mobile 390 layouts with no overflow
-- the mobile menu, and every link and anchor
-- axe (0 serious or critical issues)
-- both PDFs served as real PDFs
-- F01 and the disclosure on `/` and `/sample-report`
-- the form: preview warning before submit, the "not sent / not stored" outcome, kept text, validation, credential block (0 POSTs) and the honeypot
-- **new:** preview-accurate `/privacy` and `/contact` copy
+Includes axe (0 serious or critical), layouts at 1440 and 390 with no overflow, the
+mobile menu, links and anchors, both PDFs, F01 and the disclosure, the preview form
+behavior, the credential block, and the new positioning checks.
 
-**What this proves:** the code at `c8b498f` behaves correctly on a standard Next.js server.
-**What it doesn't prove:** that Netlify's OpenNext runtime executes the proxy gate and the
-Server Action the same way. That needs the live run above.
+**Visual check:** I screenshotted the hero diagram, Problem, Evaluate, Romance and Research
+sections at 1440 and 390 wide. No label collisions in the diagram. The Level 3 contrast
+needed one mobile wrapping fix, which is included.
 
 ### Reproduce
 
 ```bash
-git checkout c8b498f3acc5d889538d3c4d0ca52e122963989e
+git checkout f4fc81d1ec83140a39b8b41b05e7fe1a5bb2479e
 npm ci && npm run check
 npm start &   BASE_URL=http://localhost:3000 npm run test:e2e
-STAGING_ACCESS_PASSWORD=x PORT=3001 npm start &   BASE_URL=http://localhost:3001 E2E_BASIC_AUTH=preview:x npm run test:e2e
-pdftotext public/sample/emotivearc-sample-audit-captain-ivy-marlow.pdf - | grep -c MotiveLab   # 0
-sha256sum public/sample/*.pdf
+git diff --stat 9616fbd -- public/sample/      # empty: PDFs unchanged
 ```
 
 ---
 
 ## D. Commercial and scientific integrity
 
-**Customer-facing assertions changed:** only the PDF wording and the preview-mode copy
-listed in B. No claims about psychological continuity, research validation, model
-performance, romance evaluation or client results changed.
+**Customer-facing assertions changed:** all of section B. Every new example is either
+labeled illustrative (hero badge, "Illustrative failure patterns" note, "Illustrative
+contrast" label) or describes what we evaluate, not what we've found.
 
-**Standing reminders:**
-- F01 is an AI-reviewed demonstration and a **commitment/preference persistence**
-  finding. It isn't evidence for the emotional or path-dependent continuity thesis
-  (Arc's caveat, accepted).
-- The site and PDFs say plainly that no independent human reviewed the sample.
-- The overview's "Every finding reviewed by a named human reviewer" and the site's
-  "Human-reviewed findings" describe paid audits. **A named reviewer must exist before
-  the first sale** (blocker O1 below).
+**Claims for independent review:**
+
+1. **The Problem cards** assert that these failure patterns are things a character
+   "can" do. They're presented as illustrations, not observed results. Arc may want to
+   confirm none implies a demonstrated finding.
+2. **The Evaluate probe** "Do different histories lead the same character to respond
+   differently to the same moment?" describes the Level 3 research question as
+   something an audit examines. The audit "draws on" the levels (Research section), but
+   **Level 3 isn't validated.** Check that this reads as an evaluation question, not a
+   validated capability.
+3. **The Level 3 contrast** says "A coherent character might agree in both cases, but
+   not in the same way." That's a normative illustration of the hypothesis, not a
+   result.
+4. **Romance** names love, attachment and rejection explicitly. The status box still
+   says mature-content scenarios have only been exercised with offline fixtures.
+5. **F01** is now explicitly scoped as a supporting commitment/preference mechanism, as
+   Arc requested. It isn't validation of the emotional-continuity thesis.
+
+**What hasn't changed:** the AI-review disclosure; "not a validated scientific standard";
+the observable-behavior and no-consciousness statements; and the offer terms.
 
 ---
 
@@ -236,21 +186,23 @@ marketing), and the `npm audit` dev-tool advisories.
    contracting identity (L3).
 4. **Choose a payment method** (F1), and decide who pays model costs per audit (F2).
 5. **Name the human reviewer** (O1).
-6. **Approve the corrected PDFs** (section B), and update your source documents to match.
+6. **Approve the corrected PDFs** from revision 4, and update your source documents to match.
+7. **Approve the revision 5 positioning copy** (section B).
 
 ---
 
 ## G. Questions for ChatGPT
 
-1. Is the founder-observed incognito password prompt, without engineering verification,
-   sufficient to share the staging link with a small trusted group before the live e2e
-   run? Or should sharing wait for T2?
-2. Do the PDF corrections in section B resolve the publication-polish items from your
-   revision 3 review?
-3. Is the E-section blocker list complete for a first $750 engagement sold through direct
-   outreach, using the PDFs and the staging link?
-4. For T1, is publishing an existing monitored email address an acceptable first channel,
-   given the privacy notice must then name it?
+1. Do the revised hero, Problem, Evaluate, Romance and Research copy now represent the
+   central research question (believable, character-specific consequences and
+   transformations of earlier emotional and interpersonal experience) without implying
+   validated results?
+2. Is the Evaluate probe about different histories (D2) acceptable, given Level 3 is
+   unvalidated? Or should it move entirely to the Research section?
+3. Is the F01 scope note sufficient, or should the sample move off the homepage until an
+   emotional-continuity example has been rigorously reviewed?
+4. Is the revision 4 blocker list (section E) still complete? It's unchanged by this
+   revision.
 
 ---
 

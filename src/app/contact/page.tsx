@@ -13,11 +13,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
+const whatHappensNext = (formDelivers: boolean) =>
+  formDelivers
+    ? "We reply by email to arrange a short scoping conversation. Nothing is booked or billed until scope is agreed in writing."
+    : "Once our inbox is live, we'll reply by email to arrange a short scoping conversation. While this site is in preview, the form doesn't deliver messages. Nothing is booked or billed until scope is agreed in writing.";
+
 const notes = [
   {
     icon: ClipboardList,
     title: "What happens next",
-    text: "We reply by email to arrange a short scoping conversation. Nothing is booked or billed until scope is agreed in writing.",
+    text: "",
   },
   {
     icon: CalendarClock,
@@ -32,6 +37,10 @@ const notes = [
 ];
 
 export default function ContactPage() {
+  const deliveryMode = getLeadDeliveryMode();
+  const items = notes.map((n) =>
+    n.title === "What happens next" ? { ...n, text: whatHappensNext(deliveryMode !== "preview") } : n,
+  );
   return (
     <>
       <PageHeader
@@ -46,13 +55,13 @@ export default function ContactPage() {
       <Container className="grid gap-12 py-16 sm:py-20 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
         <div className="rounded-[1.75rem] border border-line bg-paper-2/60 p-6 sm:p-9">
           <InquiryForm
-            deliveryMode={getLeadDeliveryMode()}
+            deliveryMode={deliveryMode}
             sourcePath="/contact"
             discoveryCallUrl={discoveryCallUrl}
           />
         </div>
         <aside className="space-y-8" aria-label="About your inquiry">
-          {notes.map((n) => (
+          {items.map((n) => (
             <div key={n.title} className="flex gap-4">
               <n.icon className="mt-1 size-5 shrink-0 text-arc" aria-hidden strokeWidth={1.75} />
               <div>

@@ -90,7 +90,7 @@ const f01: SampleExcerpt = {
 
 export const sampleAudit = {
   character: "Captain Ivy Marlow",
-  source: "MotiveLab audit-1.1",
+  source: "EmotiveArc sample audit, version 1.1",
   /** Mirrors the disclosure printed on page 1 of the sample report. */
   disclosure:
     "This is a sample audit of an invented character from an invented company. The character ran on a real low-cost language model. An AI assistant reviewed the flagged conversations, not an independent human. It is not a customer result. In a paid audit, a named human reviewer does this work.",

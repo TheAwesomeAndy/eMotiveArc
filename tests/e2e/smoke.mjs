@@ -177,6 +177,28 @@ for (const vp of [
   await page.close();
 }
 
+// 4a. In preview mode, policy and contact pages must not promise a working form.
+{
+  const page = await newPage();
+  await page.goto(BASE + "/contact", { waitUntil: "networkidle" });
+  const preview = (await page.getByText("Preview mode.", { exact: false }).count()) > 0;
+  if (preview) {
+    check(
+      await page.getByText("While this site is in preview, the form doesn't deliver messages").isVisible(),
+      "contact page says replies need a live inbox",
+    );
+    await page.goto(BASE + "/privacy", { waitUntil: "networkidle" });
+    check(await page.getByTestId("privacy-form-preview").isVisible(), "privacy page says the preview form stores nothing");
+    check(
+      await page.getByText("the contact form is in preview mode and doesn't deliver messages").isVisible(),
+      "privacy contact section does not point to the preview form",
+    );
+  } else {
+    console.log("INFO  delivery configured; preview-only copy checks skipped");
+  }
+  await page.close();
+}
+
 // 4b. A pasted credential is blocked in the browser and never submitted.
 {
   const page = await newPage();

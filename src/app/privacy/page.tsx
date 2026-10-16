@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DraftNotice, PageHeader, Prose } from "@/components/page-header";
 import { Container } from "@/components/ui";
-import { analytics, publicContactEmail } from "@/lib/config";
+import { analytics, getLeadDeliveryMode, publicContactEmail } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Privacy Notice",
@@ -12,6 +12,9 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   const analyticsOn = Boolean(analytics.provider);
+  // While no delivery provider is configured, the form neither sends nor stores
+  // anything, so this page must not tell readers to rely on it.
+  const formDelivers = getLeadDeliveryMode() !== "preview";
   return (
     <>
       <PageHeader eyebrow="Policies" title="Website privacy notice" />
@@ -34,6 +37,13 @@ export default function PrivacyPage() {
               name, work email, company, product website, your description, and your preferred
               next step. We also record the page you submitted from and the time.
             </p>
+            {formDelivers ? null : (
+              <p data-testid="privacy-form-preview">
+                <strong>While this site is in preview,</strong> the inquiry form doesn&apos;t send
+                or store anything. Submissions are discarded after you see a notice saying so, and
+                we receive none of what you type.
+              </p>
+            )}
             <p>
               <strong>Technical data.</strong> Like most websites, our hosting provider may keep
               short-lived server logs, such as IP address, browser type, and pages requested. We
@@ -85,8 +95,18 @@ export default function PrivacyPage() {
                 </>
               ) : (
                 <>
-                  A monitored privacy contact address will be listed here before launch. Until
-                  then, you can reach us through the <Link href="/contact">contact form</Link>.
+                  A monitored privacy contact address will be listed here before launch.{" "}
+                  {formDelivers ? (
+                    <>
+                      Until then, you can reach us through the{" "}
+                      <Link href="/contact">contact form</Link>.
+                    </>
+                  ) : (
+                    <>
+                      There isn&apos;t a working way to contact us through this website yet: the
+                      contact form is in preview mode and doesn&apos;t deliver messages.
+                    </>
+                  )}
                 </>
               )}
             </p>

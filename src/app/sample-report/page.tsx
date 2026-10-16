@@ -25,7 +25,7 @@ export default function SampleReportPage() {
             Sample audit: <span className="italic">{sampleAudit.character}.</span>
           </>
         }
-        lede="A worked example of the audit format, from MotiveLab audit-1.1. Read the two-page overview, or open the full sample report."
+        lede="A worked example of the audit format, on an invented character. Read the two-page overview, or open the full sample report."
       >
         <div className="mt-9">
           <SampleDownloads />

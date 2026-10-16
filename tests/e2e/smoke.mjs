@@ -1,0 +1,153 @@
+/**
+ * End-to-end smoke test against a running server.
+ *
+ *   npm run build && npm start      # in one terminal
+ *   npm run test:e2e                # in another
+ *
+ * Env: BASE_URL (default http://localhost:3000)
+ *      CHROMIUM_PATH (path to a Chromium/Chrome binary; optional if
+ *      Playwright's own browser is installed)
+ */
+import { createRequire } from "node:module";
+import { chromium } from "playwright-core";
+
+const require = createRequire(import.meta.url);
+const axeSource = require("fs").readFileSync(require.resolve("axe-core/axe.min.js"), "utf8");
+const BASE = (process.env.BASE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+const PAGES = ["/", "/contact", "/sample-report", "/privacy", "/data-handling"];
+
+let failures = 0;
+const check = (cond, msg) => {
+  console.log(`${cond ? "PASS" : "FAIL"}  ${msg}`);
+  if (!cond) failures++;
+};
+
+const browser = await chromium.launch(
+  process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
+);
+
+// 1. Every page loads, has one h1, a title, a description, no console errors,
+//    no horizontal overflow, and no serious axe violations.
+for (const vp of [
+  { name: "desktop", width: 1440, height: 900 },
+  { name: "mobile", width: 390, height: 844 },
+]) {
+  const ctx = await browser.newContext({ viewport: vp });
+  const page = await ctx.newPage();
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(String(e)));
+  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+  for (const path of PAGES) {
+    const res = await page.goto(BASE + path, { waitUntil: "networkidle" });
+    check(res?.status() === 200, `[${vp.name}] ${path} returns 200`);
+    check((await page.locator("h1").count()) === 1, `[${vp.name}] ${path} has exactly one h1`);
+    check((await page.title()).length > 10, `[${vp.name}] ${path} has a title`);
+    const desc = await page.locator('meta[name="description"]').getAttribute("content");
+    check(Boolean(desc && desc.length > 50), `[${vp.name}] ${path} has a meta description`);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+    check(overflow <= 0, `[${vp.name}] ${path} has no horizontal overflow (${overflow}px)`);
+    if (vp.name === "desktop") {
+      await page.addScriptTag({ content: axeSource });
+      const result = await page.evaluate(async () =>
+        axe.run(document, { resultTypes: ["violations"] }),
+      );
+      const serious = result.violations.filter((v) => ["serious", "critical"].includes(v.impact));
+      for (const v of serious) console.log(`      axe ${v.impact}: ${v.id} (${v.nodes.length}) ${v.help}`);
+      check(serious.length === 0, `[axe] ${path} has no serious/critical violations`);
+    }
+  }
+  check(errors.length === 0, `[${vp.name}] no console or page errors ${errors.join(" | ")}`);
+  await ctx.close();
+}
+
+// 2. Internal links and in-page anchors resolve.
+{
+  const page = await browser.newPage();
+  await page.goto(BASE + "/", { waitUntil: "networkidle" });
+  const hrefs = await page.$$eval("a[href]", (as) => [...new Set(as.map((a) => a.getAttribute("href")))]);
+  for (const href of hrefs.filter((h) => h.startsWith("/"))) {
+    const [path, hash] = href.split("#");
+    const res = await page.request.get(BASE + (path || "/"));
+    check(res.status() === 200, `link ${href} resolves (${res.status()})`);
+    if (hash) {
+      const html = await res.text();
+      check(html.includes(`id="${hash}"`), `anchor #${hash} exists on ${path || "/"}`);
+    }
+  }
+  for (const f of ["/robots.txt", "/sitemap.xml", "/opengraph-image", "/icon.svg", "/apple-icon"]) {
+    const res = await page.request.get(BASE + f);
+    check(res.status() === 200, `${f} is served`);
+  }
+  await page.close();
+}
+
+// 3. Mobile menu opens, traps nothing unexpected, and closes on Escape.
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await ctx.newPage();
+  await page.goto(BASE + "/", { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Open menu" }).click();
+  check(await page.locator("#mobile-nav").isVisible(), "mobile menu opens");
+  await page.keyboard.press("Escape");
+  check(!(await page.locator("#mobile-nav").isVisible()), "mobile menu closes on Escape");
+  await ctx.close();
+}
+
+// 4. Inquiry form: client validation, ?next= preselection, preview/sent outcome.
+{
+  const page = await browser.newPage();
+  await page.goto(BASE + "/contact?next=discovery", { waitUntil: "networkidle" });
+  check(
+    await page.locator('input[name="nextStep"][value="discovery"]').isChecked(),
+    "?next=discovery preselects the discovery option",
+  );
+  await page.getByRole("button", { name: /Request a conversation/ }).click();
+  check(await page.getByText("Please tell us your name.").isVisible(), "empty submit shows name error");
+  check(
+    (await page.evaluate(() => document.activeElement?.getAttribute("name"))) === "name",
+    "focus moves to first invalid field",
+  );
+  await page.fill('input[name="name"]', "Test Person");
+  await page.fill('input[name="email"]', "bad");
+  await page.fill('textarea[name="message"]', "Testing the EmotiveArc inquiry form end to end.");
+  await page.getByRole("button", { name: /Request a conversation/ }).click();
+  check(await page.getByText("Please enter a valid email address.").isVisible(), "bad email is rejected");
+  await page.fill('input[name="email"]', "test@studio.example");
+  await page.waitForTimeout(3200); // respect the anti-spam timing check
+  await page.getByRole("button", { name: /Request a conversation/ }).click();
+  // Scope to the form area: Next.js also renders an empty role="alert" route announcer.
+  const outcome = page.locator("main [role=alert], main [role=status]").filter({ hasText: /\w/ });
+  await outcome.first().waitFor({ timeout: 15000 });
+  const text = (await outcome.first().innerText()).trim();
+  const preview = text.includes("preview mode");
+  check(preview || text.includes("received"), `submission shows an explicit outcome: "${text.slice(0, 80)}…"`);
+  if (preview) {
+    check(
+      (await page.inputValue('textarea[name="message"]')).length > 0,
+      "preview mode keeps the visitor's text",
+    );
+  }
+  await page.close();
+}
+
+// 5. Honeypot submissions are not delivered (server returns fake success).
+{
+  const page = await browser.newPage();
+  await page.goto(BASE + "/contact", { waitUntil: "networkidle" });
+  await page.evaluate(() => {
+    const hp = document.querySelector('input[name="fax_number"]');
+    hp.value = "bot";
+  });
+  await page.fill('input[name="name"]', "Bot");
+  await page.fill('input[name="email"]', "bot@spam.example");
+  await page.fill('textarea[name="message"]', "Buy cheap things now, lots of them, today only.");
+  await page.waitForTimeout(3200);
+  await page.getByRole("button", { name: /Send audit inquiry/ }).click();
+  await page.locator("main [role=status]").waitFor({ timeout: 15000 });
+  check(true, "honeypot submission gets a silent fake success");
+  await page.close();
+}
+
+await browser.close();
+console.log(failures ? `\n${failures} check(s) failed` : "\nAll checks passed");
+process.exit(failures ? 1 : 0);

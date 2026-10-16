@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <title>EmotiveArc mark</title>
+  <path d="M5 34 C 8 23, 12 17.5, 17 16" stroke="#0c1424" stroke-width="3" stroke-linecap="round"/>
+  <path d="M17 16 C 23.5 14, 29 10.5, 35 5" stroke="#0c1424" stroke-width="3" stroke-linecap="round"/>
+  <path d="M17 16 C 24 17, 29.5 21, 35 27" stroke="#0c1424" stroke-opacity="0.38" stroke-width="2.25" stroke-linecap="round" stroke-dasharray="0.5 4.5"/>
+  <circle cx="17" cy="16" r="4.25" fill="#9c4f22"/>
+  <circle cx="5" cy="34" r="2" fill="#0c1424"/>
+</svg>

@@ -1,338 +1,325 @@
-# EmotiveArc website: founder handoff
+# EmotiveArc website: engineering handoff
 
-Status: **launch-ready preview, not published.** Nothing has been deployed, no domain or
-service has been purchased, and no external messages have been sent. Publication needs
-founder approval.
-
-Last validated: 2026-10-16.
+This file is the source of truth for reviewing the EmotiveArc public website. Everything
+needed to verify the claims below is in this repository. Nothing depends on the Claude Code
+conversation, local files or unpushed work.
 
 ---
 
-## 1. What was built
+## A. Version and identification
 
-A complete marketing site for the $750 founding-client **AI Character Continuity Audit**,
-built to turn visitors into qualified audit inquiries (primary goal) and discovery
-conversations (secondary).
-
-**Pages**
-
-| Route | Purpose |
+| | |
 | --- | --- |
-| `/` | Full sales page: hero, problem, what we evaluate, audit offer, Romance & Intimacy, sample audit, how it works, who we serve, research foundation, FAQ, inquiry form |
-| `/contact` | Dedicated inquiry page. `?next=audit` or `?next=discovery` preselects the option |
-| `/sample-report` | Captain Ivy Marlow sample, disclosure, PDF downloads |
-| `/privacy` | Preliminary website privacy notice (draft for legal review) |
-| `/data-handling` | Client data handling, separating current practice from proposed policy (draft) |
-| 404 | Branded not-found page |
-| `/sitemap.xml`, `/robots.txt`, `/opengraph-image`, `/icon.svg`, `/apple-icon` | SEO and icons, all generated at build |
+| Date | 2026-10-16 |
+| Milestone | Revision 2: inquiry hardening, retention wording, test expansion |
+| Repository | https://github.com/TheAwesomeAndy/eMotiveArc |
+| Branch | `claude/emotivearc-website-launch-4dcl0p` |
+| Reviewed code commit | `2b404fffb2b58db2e86393a6a0ab7726a6e3286f` |
+| Handoff commit | The commit that adds this file version (documentation and one test fixture only, no runtime code) |
+| Previous reviewed commit | `228632c51cedc331f370600d8b79e2e6d21c61e5` |
+| Diff since last review | https://github.com/TheAwesomeAndy/eMotiveArc/compare/228632c51cedc331f370600d8b79e2e6d21c61e5...2b404fffb2b58db2e86393a6a0ab7726a6e3286f |
+| Current state | **Staging-ready, not production-ready.** Safe to deploy as a private, non-indexed preview. Not ready to publish: inquiry delivery is unconfigured and the sample assets are missing (section E) |
 
-**Brand identity**
+Nothing has been deployed, purchased or sent. No production environment exists.
 
-- **Mark:** a trajectory runs through an emotionally significant event (warm node) and
-  branches. The solid branch carries the consequence forward. The faint dotted branch is
-  the consequence a character can lose. It's the product thesis in one glyph.
-  Files: `public/brand/emotivearc-mark.svg` (for light backgrounds) and
-  `emotivearc-mark-light.svg` (for dark). React version: `src/components/brand/logo.tsx`.
-- **Wordmark:** "Emotive*Arc*" set in Newsreader, with *Arc* in italic.
-- **Type:** Newsreader (display serif), Inter (body), JetBrains Mono (technical labels).
-  All free Google Fonts, self-hosted by Next.js at build time.
-- **Color:** paper `#f6f4ef`, ink `#0c1424`, one cool "arc" teal `#256a70` for continuity,
-  one warm "signal" `#9c4f22` for emotional events. Tokens live in `src/app/globals.css`.
-- **Signature visual:** the hero "continuity trace" diagram, an illustrative (clearly
-  labeled) chart showing a character that responds convincingly in the moment, then
-  either carries the consequence into a later session or reverts to baseline.
+### What changed since `228632c`
 
-No stock photos, robot heads, neon brains, paid assets or paid image services were used.
+Requested by the review of `228632c`, in order:
 
-**Tech:** Next.js 16.4 (App Router, Cache Components, every route statically prerendered),
-React 19, TypeScript, Tailwind CSS 4, Lucide icons. One Server Action handles the form.
-No database. Lightweight CSS-only animation that respects `prefers-reduced-motion`.
-
----
-
-## 2. Content decisions you should know about
-
-I followed the brief's honesty rules strictly. Where I had to write copy you didn't supply,
-here's what to review:
-
-1. **Illustrative failure examples** in "The problem" (six "Earlier / Later" cards) and the
-   hero diagram are invented to explain the problem. Both are labeled on the page as
-   illustrative, not client results.
-2. **Sample audit.** The approved Captain Ivy Marlow materials were **not in this
-   workspace**, so I wrote no findings, quotes or outcomes. The section shows the required
-   disclosure and a list of what *every audit report* covers (taken from your offer, not
-   from the PDF). See section 5 to finish it.
-3. **Research levels** are described as questions with an "Active research" tag and an
-   explicit line that they aren't a validated scientific standard. I didn't know the
-   validation status of each level, so none is presented as validated. If any level *is*
-   validated, tell me and I'll add precise wording.
-4. **Romance & Intimacy** states plainly that mature-content scenarios have been exercised
-   with offline fixtures only and aren't experimentally validated against live products.
-5. **"Our working practices"** on `/data-handling` lists four commitments that need no
-   infrastructure (for example, "we don't ask for API keys through this website"). Please
-   confirm you're willing to stand behind each. The 90-day retention, deletion procedure
-   and contract terms are listed under "Proposed, not yet in place", with no deletion
-   promise.
-6. **FAQ answers** are mine. Check especially "Which models or frameworks do you work
-   with?" and "Do you need our system prompt?".
-7. The phrase **"Founding-client pricing applies to early engagements and may change"**
-   is mine. Replace it if you want a specific number of founding slots or an end date.
-8. **No testimonials, customers, metrics, partners, certifications, legal entity, address
-   or registration numbers** appear anywhere. The footer reads "© 2026 EmotiveArc" with no
-   entity suffix.
+1. **Sample audit integration: blocked, assets missing.** The approved files were not in
+   the workspace, the repository, or the founder's connected Google Drive (the
+   `eMotiveArc/website` Drive folder exists but is empty). Nothing was invented. The
+   excerpt slot now targets the F01 example by ID, and the preview placeholder names the
+   exact missing asset. The AI-review disclosure is unchanged.
+2. **Sensitive logging removed.** Inquiry contents are no longer written to server logs
+   on any path.
+3. **Server-side credential rejection added.** It covers every field, in the browser and
+   on the server.
+4. **Retention wording reconciled.** There's now one canonical statement, used on
+   `/data-handling` and in the FAQ, marked pending approval. Replacement wording for the
+   prospect sheet is in section D.
+5. **Tests expanded.** Unit and handler tests went from 7 to 21, and browser checks from
+   94 to 98.
 
 ---
 
-## 3. Environment variables
+## B. Work completed
 
-All optional. With none set, the site runs as a safe preview. Template: `.env.example`.
+### Implemented in this revision
+
+| File | What it does |
+| --- | --- |
+| [`src/lib/inquiry-handler.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/2b404fffb2b58db2e86393a6a0ab7726a6e3286f/src/lib/inquiry-handler.ts) | **New.** All inquiry logic, independent of Next.js: honeypot, timing check, rate limit, validation (including credential rejection), delivery, and the visitor-facing result messages. Order guarantees a credential is rejected before anything is delivered or logged |
+| [`src/lib/lead-delivery.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/2b404fffb2b58db2e86393a6a0ab7726a6e3286f/src/lib/lead-delivery.ts) | Resend and webhook delivery. **Logs only `safeLeadMeta`**: reference code, next-step type, source path, message length, and whether company and website were filled in. Failure logs add mode and a reason code (`http_500`, `timeout`, `TypeError`). Error messages from `fetch` are dropped because they can echo request details |
+| [`src/lib/inquiry.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/2b404fffb2b58db2e86393a6a0ab7726a6e3286f/src/lib/inquiry.ts) | Shared validation. Adds `SECRET_PATTERNS` (Anthropic, OpenAI-style, Stripe, AWS, GitHub, Slack, Google, Resend, Hugging Face, PEM private keys, JWTs) and applies them to **every** field. `findSecret` returns only the credential type, never the match |
+| [`src/app/actions.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/2b404fffb2b58db2e86393a6a0ab7726a6e3286f/src/app/actions.ts) | Now a thin Server Action: reads the client IP, calls `handleInquiry` |
+| [`src/content/policies.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/2b404fffb2b58db2e86393a6a0ab7726a6e3286f/src/content/policies.ts) | **New.** Canonical retention wording, with approval status |
+| [`src/content/sample-audit.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/2b404fffb2b58db2e86393a6a0ab7726a6e3286f/src/content/sample-audit.ts) | Excerpt type gains `findingId`. Slot pinned to `F01`, "coaching continuity". `excerpt` remains `null` |
+| [`tests/inquiry-handler.test.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/2b404fffb2b58db2e86393a6a0ab7726a6e3286f/tests/inquiry-handler.test.ts) | **New.** 11 handler tests with a fake `fetch` and captured console output |
+| [`tests/fixtures/mock-webhook.mjs`](./tests/fixtures/mock-webhook.mjs) | **New in handoff commit.** Local webhook stand-in for manual delivery tests. Prints byte counts only, not payloads |
+
+### Inquiry behavior now
+
+| Situation | Visitor sees | Server log | Delivered |
+| --- | --- | --- | --- |
+| No provider configured (preview) | Warning banner **before** submitting. After: "This form is in preview mode, so your inquiry was not sent to anyone and has not been saved…" Text stays in the form | `not_delivered_preview` + metadata | No |
+| Provider succeeds | "Inquiry received… Reference: XXXXXXXX" | `delivered` + mode + ref | Yes |
+| Provider fails or times out | "We couldn't send your inquiry, and it hasn't been saved anywhere. Your details are still in the form. Please wait a minute and press send again… Reference: XXXXXXXX." Mentions the public email instead, once `NEXT_PUBLIC_CONTACT_EMAIL` is set | `delivery_failed` + reason + metadata | No |
+| Credential in any field | Field error: "This looks like it contains an API key or other credential. Please remove it…" Blocked in the browser before any request, and again on the server | `rejected_credential` + field **names** only | No |
+| Honeypot filled or submitted in under 3 s | Fake success | `dropped_spam` + booleans | No |
+| Over 5 submissions per IP per 10 min | "Too many submissions…" | `rate_limited` | No |
+
+**Logs are not a recovery mechanism.** If delivery fails, the inquiry exists only in the
+visitor's open form. The retry message says so plainly.
+
+### Status of everything on the site
+
+| Feature | Status |
+| --- | --- |
+| All marketing sections, brand, SEO, sitemap, robots, OG image | Fully implemented |
+| Inquiry form, validation, anti-spam, credential rejection | Fully implemented |
+| Email delivery (Resend) | Implemented, **unconfigured**. Request format verified with a fake `fetch` only. Never sent through Resend |
+| Webhook delivery | Implemented, **unconfigured**. Verified against the local mock only |
+| Preview/live stage switch | Implemented. Defaults to preview (ribbon, `noindex`, robots disallow) |
+| Sample PDFs | **Placeholder.** Download buttons activate automatically when files exist |
+| F01 sample excerpt | **Placeholder** (preview builds only). Hidden on live builds |
+| Analytics | Integration point only. Off |
+| Privacy and data-handling pages | Drafts, labeled on the page, pending legal review |
+| Hero diagram and "The problem" examples | **Illustrative.** Labeled on the page as not client results |
+
+---
+
+## C. Evidence and testing
+
+All commands below were run on 2026-10-16 against commit `2b404ff` in the build container
+(Linux, Node 22.22.0, Chromium 141.0.7390.37 headless).
+
+| Command | Result |
+| --- | --- |
+| `npm run lint` | Pass. 0 errors, 0 warnings |
+| `npm run typecheck` | Pass (`tsc --noEmit`, strict) |
+| `npm test` | **21 passed, 0 failed** (10 validation and credential tests, 11 handler tests) |
+| `npm run build` | Pass. 11 routes, all statically prerendered |
+| `npm run test:e2e` against `npm start` | **98 passed, 0 failed** |
+| `npm audit --omit=dev` | 0 vulnerabilities in shipped dependencies |
+| `npm audit` | 5 high, all in `braces` via the lint toolchain (dev-only, not shipped) |
+
+### Unit and handler tests (`npm test`)
+
+Fake `fetch`, no network. They prove our logic, not any provider's behavior.
+
+- Preview mode: no network call, the visitor message says "not sent" and "not saved", and
+  logs contain none of the submitted values.
+- Webhook success: payload includes the lead, and the secret header is set. The secret
+  and lead values are absent from logs.
+- Resend success: correct endpoint, recipients split, `reply_to` set, no newline in the
+  subject, API key absent from logs.
+- HTTP 500 failure: error state with retry wording and a reference code, reason
+  `http_500` logged, no content logged.
+- Network error whose message contains the visitor's email: the email isn't logged, only
+  `TypeError`.
+- Credential in the message, in the company field, and in preview mode: rejected, no
+  delivery, the credential is absent from logs.
+- Honeypot and too-fast submissions: fake success, no delivery.
+- Rate limit: the sixth submission from one IP is refused.
+- 12 credential formats detected. 3 realistic product descriptions not flagged.
+
+**Mutation check:** temporarily restoring the old `console.info(JSON.stringify(lead))`
+made 2 tests fail. The fix restored 21 of 21. The log-hygiene tests can detect the
+original defect.
+
+### Browser tests (`npm run test:e2e`, file `tests/e2e/smoke.mjs`)
+
+- Five pages at 1440×900 and 390×844: HTTP 200, one `h1`, title and description, no
+  horizontal overflow, no console errors.
+- **axe-core 4.x**: 0 serious or critical violations on all five pages.
+- Every homepage link and anchor resolves. Robots, sitemap, OG image and icons served.
+- Mobile menu opens and closes with Escape.
+- Form: errors and focus, invalid email, `?next=` preselection, preview outcome keeps
+  text, **preview warning visible before submit (new)**, honeypot drop.
+- **New:** a pasted Anthropic-format key triggers the live warning, blocks submission with
+  the credential error, and produces **0 POST requests**.
+
+### Manual checks on the production server (not automated)
+
+| Check | How | Result |
+| --- | --- | --- |
+| Server log content after the e2e run | Searched the `npm start` output for every submitted test value | 0 matches. Only JSON metadata lines |
+| Provider failure end to end | Mock webhook in fail mode, HTML form POST with curl | Retry message with reference rendered. Log line `delivery_failed`, `http_500`. 0 content matches |
+| Server-side credential rejection, bypassing the browser | curl POST with a key in `message` | Credential error rendered. Log `rejected_credential`, `fields: message`. **Mock received 0 requests** |
+| Data-handling page layout | Screenshot | Renders correctly |
+
+The two curl checks are plain multipart form POSTs, so they also re-verify the
+no-JavaScript path against the new handler. From revision 1, still valid but not re-run:
+live-stage build switches and PDF auto-activation with dummy files.
+
+### Reproduce
+
+```bash
+git checkout 2b404fffb2b58db2e86393a6a0ab7726a6e3286f
+npm ci
+npm run check                          # lint, typecheck, 21 tests, build
+npm start &                            # http://localhost:3000
+npx playwright install chromium        # once, if no Chromium is available
+BASE_URL=http://localhost:3000 npm run test:e2e
+# or: CHROMIUM_PATH=/path/to/chrome BASE_URL=... npm run test:e2e
+
+# Manual delivery-failure check
+node tests/fixtures/mock-webhook.mjs &
+curl localhost:4555/mode/fail
+CONTACT_WEBHOOK_URL=http://localhost:4555/hook PORT=3001 npm start
+# submit the form at http://localhost:3001/contact and read the server output
+```
+
+**Can't be reproduced without external accounts:** real Resend delivery (needs an account
+and a verified domain), a Vercel deployment, and DNS or domain behavior.
+
+**Not tested at all:** Safari, Firefox, real screen readers, Lighthouse on real hosting.
+
+---
+
+## D. Commercial and scientific integrity
+
+### Customer-facing assertions changed in this revision
+
+| Where | Before | Now |
+| --- | --- | --- |
+| `/data-handling`, proposed list | "A 90-day retention period for client audit materials after the final report or retest." | "Our proposed default is to keep client audit materials for 90 days after we deliver the final report or regression retest, unless your written agreement sets a different period." |
+| `/data-handling`, note | "We don't yet offer automated deletion…" | "This default hasn't been finalized. Deletion is not automated, and we don't yet have a documented deletion procedure or issue deletion confirmations. The retention period and how deletion is handled will be set out in each client's written agreement before any materials are shared." Plus a visible tag: "Pending founder and legal approval" |
+| FAQ, "How do you handle our data?" | "Confidentiality, retention, and deletion terms are agreed in writing…" | "Our proposed default is 90 days after the final report or retest, confirmed in each client's written agreement. Deletion isn't automated." |
+| Form messages | Preview, failure and success wording | As in the table in section B. The success message now includes a reference code |
+| Form credential error | (none) | "…We never need credentials through this form." |
+
+No claims about psychological continuity, research validation, model performance,
+romance or intimacy evaluation, or client results changed in this revision.
+
+### Retention wording for the prospect sheet (founder action)
+
+The earlier prospect sheet says client data is retained for 90 days by default. The site
+now says that's a *proposed* default. **Before the sheet is published as
+`emotivearc-audit-overview.pdf`,** replace its retention line with:
+
+> **Client data:** Our proposed default is to keep audit materials for 90 days after the
+> final report or retest, confirmed in each client's written agreement. Deletion is not
+> automated. *(Terms pending approval.)*
+
+If the founder and counsel instead approve 90 days as a firm commitment, change
+`src/content/policies.ts` in one place and the site updates everywhere. That commitment
+should wait until a documented deletion procedure exists.
+
+### Standing claims that need independent review
+
+| Claim | Location | Basis |
+| --- | --- | --- |
+| Three research levels described as "active research", "not a validated scientific standard" | Research section | Founder brief. Validation status of each level unknown to engineering |
+| Mature-content scenarios "exercised with offline test fixtures… not yet experimentally validated against live products" | Romance section, FAQ | Founder brief |
+| Sample disclosure: "ran against a real language model… reviewed by an AI assistant, not by an independent human reviewer. Paid audits include human expert review." | Sample section, `/sample-report` | Founder brief. **Unchanged** |
+| Six "Earlier / Later" failure cards and the hero continuity trace | Problem section, hero | **Illustrative, written by engineering.** Labeled on the page |
+| "Summaries and retrieval… we suspect they can flatten what facts meant… a working hypothesis" | Who we serve | Hypothesis. Labeled as such |
+| "5-business-day target", "15–20 scenarios", "one regression retest", "Some audits find no substantial problems" | Audit section, FAQ | Founder brief |
+| "The method isn't tied to a particular model provider" | FAQ | Engineering inference from behavior-based testing. Needs founder confirmation |
+
+**Demonstrated vs. not:** no client results, model-performance figures or validated
+findings appear anywhere. The only real-model artifact referenced is the AI-reviewed
+Captain Ivy Marlow demonstration, and its content is not yet on the site.
+
+---
+
+## E. Limitations and blockers
+
+| Severity | Issue | Needs |
+| --- | --- | --- |
+| **Critical** (for public launch) | Inquiry delivery is unconfigured. The form works and warns visitors honestly, but no lead reaches anyone | External account (Resend or a webhook destination) + founder approval |
+| **High** | Sample PDFs missing: `public/sample/emotivearc-sample-audit-captain-ivy-marlow.pdf` (full report) and `public/sample/emotivearc-audit-overview.pdf` (two-page prospect sheet) | Founder to supply approved files |
+| **High** | F01 coaching-continuity excerpt missing: setup, earlier exchange, later exchange, finding text and any priority label, copied verbatim from the approved report | Founder to supply approved text |
+| **High** | Prospect sheet retention wording contradicts the site until edited (section D) | Founder edit, before the PDF is added |
+| **High** | Privacy and data-handling pages are unreviewed drafts, with no legal entity or provider names | Legal decision |
+| **High** | Brand and domain clearance, monitored mailbox, hosting account | Founder approval + external accounts |
+| Medium | Rate limit is per server instance (in-memory). No CAPTCHA | Engineering, if spam appears (Cloudflare Turnstile is free) |
+| Medium | Credential detection is pattern-based. It catches common formats, not arbitrary secrets. The form text still tells visitors not to send any | Accepted limitation |
+| Medium | No Content-Security-Policy header | Engineering, after analytics and booking choices are final |
+| Medium | Real Resend delivery, Safari, Firefox and screen readers untested | External account / devices |
+| Low | 5 dev-only `npm audit` advisories (`braces`) | None now. The suggested forced fix would downgrade tooling |
+| Low | One generic OG image for all pages | Optional |
+
+There are no known critical security, privacy or data-loss defects in the code at
+`2b404ff`.
+
+---
+
+## F. Founder decisions
+
+1. **Supply the three sample assets** (section E), with the prospect sheet's retention
+   line changed first.
+2. **Approve or revise the retention statement** (section D), with counsel.
+3. **Choose and approve inquiry delivery:** Resend (needs a verified domain) or a
+   webhook destination.
+4. **Approve a staging deployment.** This needs a Vercel account. Vercel's free plan is
+   intended for non-commercial use, so a commercial launch likely needs the paid Pro plan.
+5. **Clear the brand and domain, and set up the monitored mailbox**, before
+   `NEXT_PUBLIC_CONTACT_EMAIL` is set.
+
+---
+
+## G. Questions for ChatGPT
+
+1. Is the retention statement in `src/content/policies.ts` accurate enough to publish as a
+   *proposed* term, and is the replacement prospect-sheet line in section D acceptable?
+2. In preview mode the form accepts a submission and then says it wasn't sent. For a
+   shared staging link, is that acceptable, or should submission be disabled entirely
+   until delivery is configured?
+3. If the PDFs arrive before the F01 excerpt (or the reverse), should the sample section
+   launch partially, or stay hidden until both exist?
+4. Does the sample disclosure sentence sufficiently prevent a reader from assuming the
+   demonstration was human-reviewed?
+5. Is rejecting the whole submission when a credential is detected the right trade-off,
+   or should the form strip the credential and continue? (The current choice favors
+   never transmitting it.)
+
+---
+
+## Appendix 1: environment variables
+
+All optional. With none set the site runs as a safe preview. Template: `.env.example`.
 Pages are prerendered, so **redeploy after changing any variable.**
 
 | Variable | Scope | Default | Purpose |
 | --- | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_STAGE` | public | `preview` | `preview` shows the ribbon, sets `noindex`, and robots.txt blocks crawlers. `live` removes all three. Set `live` only after approving publication |
-| `NEXT_PUBLIC_SITE_URL` | public | Vercel URL, then `http://localhost:3000` | Canonical URL for metadata, sitemap and OG. Set once the domain is cleared |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | public | unset | Shows a mailto link in the footer, contact and privacy pages. **Leave unset until the mailbox exists and is monitored** |
-| `NEXT_PUBLIC_DISCOVERY_CALL_URL` | public | unset | Optional booking link (Cal.com, etc.) shown under the form |
-| `RESEND_API_KEY` | **server secret** | unset | Email delivery through Resend. Needs all three Resend variables |
-| `CONTACT_TO_EMAIL` | server | unset | Where inquiries go. Comma-separated for multiple recipients |
-| `CONTACT_FROM_EMAIL` | server | unset | Sender, on a domain verified in Resend, e.g. `EmotiveArc Website <inquiries@emotivearc.com>` |
-| `CONTACT_WEBHOOK_URL` | **server secret** | unset | Alternative to Resend: POSTs each inquiry as JSON (Zapier, Make, Slack, Google Sheets via automation) |
-| `CONTACT_WEBHOOK_SECRET` | server secret | unset | Sent as the `X-EmotiveArc-Secret` header so the receiver can verify requests |
-| `NEXT_PUBLIC_ANALYTICS_PROVIDER` | public | unset | `plausible` enables Plausible. **Off until you approve a provider** |
-| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | public | unset | Domain registered in Plausible |
-| `NEXT_PUBLIC_PLAUSIBLE_SRC` | public | Plausible's script URL | Override for a self-hosted or proxied script |
+| `NEXT_PUBLIC_SITE_STAGE` | public | `preview` | `live` removes the ribbon and allows indexing. Founder approval only |
+| `NEXT_PUBLIC_SITE_URL` | public | Vercel URL, then localhost | Canonical URL for metadata and sitemap |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | public | unset | Shown in the footer and the retry message. Only once monitored |
+| `NEXT_PUBLIC_DISCOVERY_CALL_URL` | public | unset | Optional booking link |
+| `RESEND_API_KEY` | **server secret** | unset | Email delivery, with the next two |
+| `CONTACT_TO_EMAIL` | server | unset | Recipient(s), comma-separated |
+| `CONTACT_FROM_EMAIL` | server | unset | Sender on a Resend-verified domain |
+| `CONTACT_WEBHOOK_URL` | **server secret** | unset | JSON webhook alternative |
+| `CONTACT_WEBHOOK_SECRET` | server secret | unset | Sent as `X-EmotiveArc-Secret` |
+| `NEXT_PUBLIC_ANALYTICS_PROVIDER` | public | unset | `plausible`. Off until approved |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` / `_SRC` | public | unset | Plausible settings |
 
-Server variables never reach the browser. `.env*` files are gitignored, except
-`.env.example`, which contains no values.
+## Appendix 2: adding the sample assets
 
----
+1. Put the two PDFs in `public/sample/` with the exact names in section E. Check they
+   contain no client data, private datasets, credentials or internal MotiveLab material.
+   Everything in `public/` is downloadable by anyone.
+2. Fill in `excerpt` in `src/content/sample-audit.ts`, with `findingId: "F01"` and wording
+   copied verbatim from the approved report.
+3. Run `npm run check` and `npm run test:e2e`, then commit.
 
-## 4. The inquiry form
+## Appendix 3: staging deployment (needs founder approval and a Vercel account)
 
-**Fields:** preferred next step (audit or discovery), name, work email, company (optional),
-product website (optional), description (20 to 2,000 characters). The form asks visitors
-not to include API keys, transcripts or system prompts, and warns if the text looks like
-it contains an API key.
+1. vercel.com → sign in with GitHub → Add New → Project → import
+   `TheAwesomeAndy/eMotiveArc`. Framework: Next.js. Root: repository root. No other
+   settings needed.
+2. Leave `NEXT_PUBLIC_SITE_STAGE` unset, so the deployment is a non-indexed preview with
+   the ribbon visible.
+3. Optionally set `CONTACT_WEBHOOK_URL` to a test receiver to exercise delivery.
+4. After deploying, run `BASE_URL=<preview URL> npm run test:e2e`.
 
-**Validation:** the same rules run in the browser (instant, accessible errors, focus moves
-to the first problem) and on the server (authoritative). See `src/lib/inquiry.ts`.
+## Appendix 4: repository hygiene
 
-**Anti-spam:** a hidden honeypot field, a minimum fill time of 3 seconds, and a per-IP
-rate limit (5 submissions per 10 minutes). Suspected bots get a fake success and nothing
-is delivered. The rate limiter is in-memory, so on serverless hosting it's a speed bump,
-not a guarantee. If spam becomes a problem, add Cloudflare Turnstile (free).
-
-**Delivery modes** (chosen automatically from env vars, in this order):
-
-1. **Email (Resend)** when `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL`
-   are all set. Plain-text email with `Reply-To` set to the visitor, so you can reply
-   directly. No confirmation email goes to the visitor, since that would be an external
-   communication you haven't approved.
-2. **Webhook** when `CONTACT_WEBHOOK_URL` is set.
-3. **Preview** (current state) when neither is set. The form shows a "Preview mode"
-   banner before submission. After submission it tells the visitor plainly that the
-   inquiry **was not sent** and keeps their text in the form. The submission is also
-   written to the server log (`[inquiry:preview]`) so test submissions can be checked.
-   Nothing is silently discarded.
-
-**If delivery fails** (provider error or timeout), the visitor sees an error, their text
-is kept, and the full inquiry is written to the server log (`[inquiry:email]` or
-`[inquiry:webhook]`) so it can be recovered.
-
-**Works without JavaScript** through Next.js progressive enhancement (verified, see section 7).
-
-### To switch on email delivery (Resend)
-
-1. Create a Resend account. The free tier covers early volume. **Needs your approval.**
-2. Add and verify the sending domain in Resend (DNS records on `emotivearc.com`).
-3. Create an API key with "sending access" only.
-4. In Vercel → Project → Settings → Environment Variables, add `RESEND_API_KEY`,
-   `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL` for Production (and Preview if wanted).
-5. Redeploy. The preview banner disappears and the ribbon stops mentioning the form.
-6. Send a test inquiry and confirm it arrives and that replying reaches the sender.
-
----
-
-## 5. Finishing the sample audit
-
-Put the approved files in `public/sample/` with **exactly** these names:
-
-| File | Contents |
-| --- | --- |
-| `public/sample/emotivearc-sample-audit-captain-ivy-marlow.pdf` | The longer sample report |
-| `public/sample/emotivearc-audit-overview.pdf` | The two-page prospect sheet |
-
-The download buttons switch on automatically at the next build (verified with test files).
-Until then, preview builds show dashed "Placeholder" boxes naming the missing file, and
-live builds hide them and show "The full sample report is available on request".
-
-Optional: to show a short excerpt on the page, fill in `excerpt` in
-`src/content/sample-audit.ts` with approved wording (setup, a short earlier and later
-exchange, the finding). Copy it from the approved report. Don't paraphrase.
-
-**Before committing the PDFs,** check they contain no client data, private datasets,
-API keys, internal MotiveLab material or unreleased model details. Everything in
-`public/` can be downloaded by anyone.
-
-The disclosure shown with the sample reads: *"This demonstration ran against a real
-language model. Its findings were reviewed by an AI assistant, not by an independent
-human reviewer. Paid audits include human expert review."* Edit it in
-`src/content/sample-audit.ts` if needed.
-
----
-
-## 6. Running and deploying
-
-### Local preview
-
-```bash
-npm install
-npm run dev                    # http://localhost:3000, hot reload
-# or, for the production build:
-npm run build && npm start     # http://localhost:3000
-```
-
-Requires Node.js 20.9 or newer (tested on Node 22.22).
-
-### Deploying to Vercel (needs founder approval)
-
-1. Import `TheAwesomeAndy/eMotiveArc` in Vercel. Framework preset: **Next.js**. Root
-   directory: repository root. No build settings need changing (`npm run build`).
-2. Leave `NEXT_PUBLIC_SITE_STAGE` unset at first. Every deployment then has the preview
-   ribbon and `noindex`, so a Vercel preview URL is safe to share for review.
-3. The Hobby (free) plan works technically, but Vercel's terms limit Hobby to
-   non-commercial use. For a commercial launch, plan on **Vercel Pro** (paid). That's a
-   purchase decision for you.
-4. When ready to launch: attach the domain, set `NEXT_PUBLIC_SITE_URL`,
-   `NEXT_PUBLIC_SITE_STAGE=live`, the delivery variables and (optionally)
-   `NEXT_PUBLIC_CONTACT_EMAIL`, then redeploy.
-5. After launch, submit `https://<domain>/sitemap.xml` in Google Search Console.
-
-Any static-capable Node host works too (Netlify, Cloudflare, a VPS running `npm start`).
-The site doesn't depend on Vercel-specific APIs.
-
----
-
-## 7. Validation results
-
-All results below are from 2026-10-16 in the build container (Linux, Node 22.22.0,
-Chromium 141 headless).
-
-| Check | Result |
-| --- | --- |
-| `npm run lint` (ESLint, Next core-web-vitals + TypeScript rules) | Pass, 0 errors, 0 warnings |
-| `npm run typecheck` (`tsc --noEmit`, strict) | Pass |
-| `npm test` (7 unit tests for validation, normalization, free-mail and secret detection) | 7 / 7 pass |
-| `npm run build` | Pass. All 11 routes statically prerendered, including the OG image |
-| `npm run test:e2e` (browser smoke test) | **94 / 94 checks pass** |
-| `npm audit --omit=dev` (shipped dependencies) | 0 vulnerabilities |
-
-**What the e2e suite covers** (`tests/e2e/smoke.mjs`):
-
-- Every page at 1440×900 and 390×844: HTTP 200, exactly one `h1`, title and meta
-  description present, no horizontal overflow, no console or page errors.
-- **axe-core accessibility scan** on every page: 0 serious or critical violations. The
-  first run found 19 color-contrast failures, all fixed by darkening the `faint`, `arc`
-  and `signal` tokens and the dim text on dark sections. Every text element axe checks now meets WCAG AA (4.5:1). Small labels inside the hero SVG diagram were raised in size and opacity but sit outside axe's checks.
-- Every internal link and in-page anchor on the homepage resolves.
-- `robots.txt`, `sitemap.xml`, OG image and icons are served.
-- Mobile menu opens and closes on Escape.
-- Form: empty submit shows errors and focuses the first field, invalid email rejected,
-  `?next=discovery` preselects, preview-mode submission shows the "not sent" notice and
-  keeps the text, honeypot submission is silently dropped.
-
-**Checked manually** (scripts in the session scratchpad, not committed):
-
-- **Live-stage build** (`NEXT_PUBLIC_SITE_STAGE=live`): ribbon gone, `index, follow`
-  meta, robots.txt allows crawling and lists the sitemap, placeholders hidden, preview
-  form banner gone once delivery is configured.
-- **PDF activation:** with test PDFs in `public/sample/`, both download buttons render
-  and the files serve as `application/pdf` with HTTP 200. Test files were then deleted.
-- **Webhook delivery** against a local mock receiver: payload and `X-EmotiveArc-Secret`
-  header arrive. With the receiver returning HTTP 500, the visitor sees the error, keeps
-  their text, and the full inquiry appears in the server log.
-- **No-JavaScript submission:** a plain HTML form POST is processed by the Server
-  Action, delivered, and the "Inquiry received" panel renders.
-- **Visual review** of full-page desktop and mobile screenshots. Fixes made along the
-  way: mobile header button overflow, hero diagram labels too small on phones and
-  overlapping lines, OG image curve crossing text, button text wrapping, diagram
-  branches hidden under reduced motion.
-
-**Not tested:** real email delivery through Resend (needs an account and a verified
-domain), Safari and Firefox (only Chromium was available), real screen readers (only
-automated axe checks plus semantic review), and Lighthouse scores on real hosting.
-
-### Re-running the tests
-
-```bash
-npm run check                                   # lint, types, unit tests, build
-npm start &                                     # serve the production build
-npx playwright install chromium                 # once, if you have no Chromium
-BASE_URL=http://localhost:3000 npm run test:e2e
-# or point at an existing browser:
-CHROMIUM_PATH="/path/to/chrome" BASE_URL=http://localhost:3000 npm run test:e2e
-```
-
----
-
-## 8. Known issues and limitations
-
-- **Dev-only advisories:** `npm audit` reports 5 high-severity advisories in `braces`, a
-  transitive dependency of the lint toolchain. It isn't shipped to visitors. The suggested
-  `npm audit fix --force` would downgrade Next.js tooling, so I left it.
-- **Rate limiting is per server instance** (in-memory). Fine at launch volume, not a hard
-  guarantee.
-- **The privacy and data-handling pages are drafts**, labeled as such on the page. They
-  need legal review and the provider names (hosting, email) once chosen.
-- **No Content-Security-Policy header yet.** Basic security headers are set (`nosniff`,
-  `DENY` framing, referrer policy, HSTS, permissions policy). A strict CSP needs nonce
-  handling and is worth adding once analytics and booking choices are final.
-- **The OG image is generic** for all pages. Per-page images can be added later.
-- **No preview URL exists yet**, because deploying needs your approval and a Vercel account.
-- `AGENTS.md` is written by Next.js for AI coding tools. It's harmless and can stay.
-
----
-
-## 9. What the founder needs to provide or decide
-
-**Assets**
-
-- [ ] The two approved sample PDFs (section 5).
-- [ ] Optional: an approved short excerpt from the sample report.
-- [ ] Confirmation of the research-level wording, or the actual validation status of
-      each level.
-
-**Decisions**
-
-- [ ] Approve the copy, especially the items in section 2.
-- [ ] Final brand clearance for "EmotiveArc" (legal and trademark).
-- [ ] Whether to cap founding-client pricing (number of slots or end date).
-- [ ] Analytics: none, Plausible (cookieless, paid), or another provider.
-- [ ] A booking link for discovery calls, if wanted.
-
-**Accounts and purchases (needs your approval, nothing has been bought)**
-
-- [ ] Domain `emotivearc.com`: availability, clearance and purchase.
-- [ ] Mailbox `hello@emotivearc.com`, set up and monitored before the address appears.
-- [ ] Hosting: a Vercel account (Pro for commercial use) or another host.
-- [ ] Inquiry delivery: a Resend account with a verified domain, or a webhook destination.
-- [ ] Legal review of `/privacy` and `/data-handling`, plus legal entity details to add.
-
-**Before going live**
-
-- [ ] Set `NEXT_PUBLIC_SITE_STAGE=live` and `NEXT_PUBLIC_SITE_URL`, then redeploy.
-- [ ] Send a real test inquiry end to end.
-- [ ] Re-run `npm run test:e2e` against the live URL.
-
----
-
-## 10. Repository hygiene
-
-- `.gitignore` blocks `.env*` (except `.env.example`), build output, and research or
-  client paths: `/motivelab`, `/research`, `/private`, `/datasets`, `/experiments`,
-  `/evaluations`, `/clients`, `/client-data`, `/transcripts`, plus `*.jsonl`,
-  `*.parquet`, `*.sqlite`, `*.db`.
-- No credentials, client information, research datasets or MotiveLab materials are in
-  this repository.
-- Keep MotiveLab in its own private repository. This one is public-facing by design.
+`.gitignore` blocks `.env*` (except `.env.example`), build output, and research or client
+paths (`/motivelab`, `/research`, `/private`, `/datasets`, `/experiments`, `/evaluations`,
+`/clients`, `/client-data`, `/transcripts`, `*.jsonl`, `*.parquet`, `*.sqlite`, `*.db`).
+A staged-file scan for env files, PDFs and credential patterns ran before each commit: no
+matches. MotiveLab research stays in its own private repository with its own `HANDOFF.md`.

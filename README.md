@@ -30,7 +30,7 @@ npm run dev                  # http://localhost:3000
 | `npm run build` / `npm start` | Production build and server |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript, no emit |
-| `npm test` | Unit tests for inquiry validation (Node test runner) |
+| `npm test` | Unit tests for validation, credential rejection and inquiry handling (Node test runner + tsx) |
 | `npm run test:e2e` | Browser smoke test against a running server (see handoff doc) |
 | `npm run check` | lint + typecheck + unit tests + build |
 

@@ -1,8 +1,7 @@
 # EmotiveArc website: engineering handoff
 
 Source of truth for reviewing the EmotiveArc public website. Everything needed to verify
-the claims below is in this repository. Nothing depends on the Claude Code conversation,
-local files or unpushed work.
+the claims below is in this repository. Nothing depends on the Claude Code conversation.
 
 ---
 
@@ -11,176 +10,159 @@ local files or unpushed work.
 | | |
 | --- | --- |
 | Date | 2026-10-16 |
-| Milestone | Revision 3: approved sample audit, Issue #1 fixes, staging readiness |
+| Milestone | Revision 4: staging verification attempt, PDF corrections, preview-accurate copy, launch-blocker list |
 | Repository | https://github.com/TheAwesomeAndy/eMotiveArc |
 | Branch | `claude/emotivearc-website-launch-4dcl0p` |
-| Reviewed code commit | `a4aa89077c3658549403dd7525efc539524c313a` |
+| Reviewed code commit | `c8b498f3acc5d889538d3c4d0ca52e122963989e` |
 | Handoff commit | The commit that adds this file version (documentation only) |
-| Previous reviewed commit | `3e89678b69da01f7aa11564895cf39af1d7148ec` (code at `2b404ff`) |
-| Diff since last review | https://github.com/TheAwesomeAndy/eMotiveArc/compare/3e89678b69da01f7aa11564895cf39af1d7148ec...a4aa89077c3658549403dd7525efc539524c313a |
-| Authorization | [Issue #1](https://github.com/TheAwesomeAndy/eMotiveArc/issues/1): founder approved a **non-production** staging preview only |
-| Current state | **Staging-ready. Not deployed. Not production-ready.** |
+| Previous reviewed commit | `db3d4024f4ab08f625c5669dbc2885bff321fff4` (code at `a4aa890`) |
+| Diff since last review | https://github.com/TheAwesomeAndy/eMotiveArc/compare/db3d4024f4ab08f625c5669dbc2885bff321fff4...c8b498f3acc5d889538d3c4d0ca52e122963989e |
+| Authorization | [Issue #1](https://github.com/TheAwesomeAndy/eMotiveArc/issues/1): $0 non-production staging only. No commercial launch |
+| Current state | **Staging deployed by the founder on Netlify Free. Engineering could not verify it** (see C). Not production-ready |
 
-**Staging deployment status: blocked, not deployed.** This build environment has no
-Vercel, Netlify or Cloudflare account access, and Issue #1 says to stop if a host needs
-founder sign-in or payment. **No staging URL exists.** Exact setup steps are in
-Appendix 3. Nothing was purchased, published, or sent to anyone.
+### Staging deployment (founder-managed)
 
-### What changed since `3e89678`
+| | |
+| --- | --- |
+| Host | Netlify Free (founder account; engineering has no access) |
+| Deploy permalink (immutable) | `https://6ad27de1cb377b058cf5c12f--sensational-cranachan-560be5.netlify.app/` |
+| Stable site URL | `https://sensational-cranachan-560be5.netlify.app/` |
+| Deployed commit | **Not confirmed.** The permalink was created after `db3d402` was pushed, so it most likely runs `db3d402`, but that's an inference. It does **not** include this revision's fixes. A new deploy of `c8b498f` or later is needed (Netlify creates one automatically if continuous deployment is on for this branch) |
+| Access protection | Founder reports that a fresh incognito window asks for a password. **Not verified by engineering**, and the protection mechanism (app gate vs. Netlify feature) is unconfirmed |
+| Configuration (expected per Issue #1) | `STAGING_ACCESS_PASSWORD` set privately; `NEXT_PUBLIC_SITE_STAGE` unset or `preview`; no `CONTACT_*`, `RESEND_*` or analytics variables. **Not visible to engineering** |
 
-1. **Approved sample assets integrated** (founder-supplied, reviewed before commit). Both
-   PDFs added, F01 excerpt on the homepage and `/sample-report`, disclosure aligned with
-   the report.
-2. **Prospect sheet retention wording updated** in the PDF itself (page 2 only).
-3. **`sourcePath` allowlisted** before logging or delivery, with regression tests.
-4. **Failure wording corrected.** It no longer claims nothing was saved after a provider
-   was contacted.
-5. **Preview mode never implies delivery,** including on the spam-handling paths.
-6. **Optional staging access gate** (HTTP Basic Auth), free and host-independent.
-7. **Site copy aligned with the approved overview** on what clients share at kickoff.
+### What changed since `db3d402`
+
+1. **Full sample report:** the broken sentence on **page 7** is fixed (my earlier note said
+   page 6, which was wrong; Arc's page 7 is correct). MotiveLab is replaced by EmotiveArc
+   on pages 1, 6 and 7.
+2. **Overview:** "available on request" now reads "available on the EmotiveArc website".
+3. **`/privacy`:** preview-aware. It no longer tells readers to contact us through a form
+   that can't deliver.
+4. **`/contact`:** preview-aware "What happens next".
+5. **Site sample labels** no longer cite MotiveLab. The Research section still explains
+   MotiveLab as EmotiveArc's research program.
+6. **e2e:** new checks for the preview-accurate privacy and contact copy.
 
 ---
 
 ## B. Work completed
 
-### Sample audit assets
+### PDF corrections
 
-| Published file | Source | Changes | SHA-256 |
+Edited with PyMuPDF redaction (old text removed from the file, not covered), then re-set
+in Times regular and bold. Liberation Serif, the PDFs' original font, is metric-compatible
+with Times, so line widths match. A word-level `pdftotext` diff against the previous
+versions shows **only** the changes below. Page counts are unchanged (8 and 2).
+`MotiveLab` and "on request" occur 0 times in either file.
+
+| File | Page | Before | After |
 | --- | --- | --- | --- |
-| [`public/sample/emotivearc-sample-audit-captain-ivy-marlow.pdf`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/a4aa89077c3658549403dd7525efc539524c313a/public/sample/emotivearc-sample-audit-captain-ivy-marlow.pdf) | Founder upload, 8 pages | **None.** Byte-identical to the upload | `5a7465f463d04ad5ffe820a8b83a66c3b9dc59d3baf4380bcef262e0db6d7342` |
-| [`public/sample/emotivearc-audit-overview.pdf`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/a4aa89077c3658549403dd7525efc539524c313a/public/sample/emotivearc-audit-overview.pdf) | Founder upload, 2 pages | Page 2 only, see below. Page 1 text verified identical | `1400d029ceec83824fb05c8d0b3d22e640bc9ea3f729c9a50876551d7afc2c70` |
+| Full report | 1 | "made to show what a MotiveLab audit delivers" | "made to show what an EmotiveArc audit delivers" (paragraph re-wrapped within its 3 lines) |
+| Full report | 6 | "API calls by MotiveLab" | "API calls by EmotiveArc" |
+| Full report | 6 | "Claude (MotiveLab development assistant), an AI assistant. **No independent human reviewed this report.**" | Same, with "EmotiveArc development assistant" |
+| Full report | 7 | "…Claude (MotiveLab development assistant), an AI assistant. **No independent human reviewed this report.** read every flagged conversation and decided…" | "…Claude (EmotiveArc development assistant), an AI assistant, read every flagged conversation and decided what appears here, as a finding, an observation, or not at all. **No independent human reviewed this report.**" |
+| Overview | 1 | "The full sample report is available on request." | "The full sample report is available on the EmotiveArc website." |
 
-**Overview edits** (made with PyMuPDF redaction, so the old text is **removed from the
-file**, not covered. `pdftotext` finds 0 occurrences of the old wording):
+Overview page 2 (retention and contact) is unchanged from revision 3. The F01 pages (2–3)
+are untouched, and the site excerpt still matches the PDF text verbatim (13 of 13
+strings).
 
-| | Before | After |
-| --- | --- | --- |
-| "Your data" box | "Used only for your audit, kept for 90 days by default, and never used for research or other clients without written permission." | "Used only for your audit, and never used for research or other clients without written permission. Proposed default retention: 90 days, confirmed in your written agreement. Deletion is not automated. Terms pending approval." |
-| Contact line | "Contact: [Founder to add contact details]" | "Contact: use the inquiry form on the EmotiveArc website." |
-
-Document metadata title set to "EmotiveArc Character Continuity Audit: overview". The
-new box text is set at 9.2pt (originally 10.1pt) to fit the existing box.
-
-**Pre-commit review of both PDFs:** invented character, fictional client, no real
-customer data, no credentials or email addresses, no system-prompt text (the report
-states only its length, 469 characters). The full report discloses on page 1 that an AI
-assistant, not an independent human, reviewed it.
-
-**F01 excerpt.** [`src/content/sample-audit.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/a4aa89077c3658549403dd7525efc539524c313a/src/content/sample-audit.ts)
-holds the finding title, labels (Medium · Observed behaviour · Commitments and
-boundaries), setup, the six transcript lines, the "12 turns of other conversation" gap,
-the finding, the report's own qualification ("we count only the 12-turn run as a
-failure") and the proposed intervention, labeled "not yet tested". Every string was
-checked against the PDF's extracted text. 13 of 13 match verbatim, including straight
-quotes and em dashes.
-
-**Disclosure** now mirrors page 1 of the report and appears **before** the excerpt:
-*"This is a sample audit of an invented character from an invented company. The character
-ran on a real low-cost language model. An AI assistant reviewed the flagged
-conversations, not an independent human. It is not a customer result. In a paid audit,
-a named human reviewer does this work."*
-
-### Issue #1 code fixes
-
-| File | Change |
+| Published file | SHA-256 |
 | --- | --- |
-| [`src/lib/inquiry-handler.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/a4aa89077c3658549403dd7525efc539524c313a/src/lib/inquiry-handler.ts) | `sanitizeSourcePath`: only `/`, `/contact` and `/sample-report` pass. Anything else becomes `other` before logs or delivery. New failure, preview and too-fast messages. Honeypot outcome is mode-aware |
-| [`src/lib/access-gate.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/a4aa89077c3658549403dd7525efc539524c313a/src/lib/access-gate.ts), [`src/proxy.ts`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/a4aa89077c3658549403dd7525efc539524c313a/src/proxy.ts) | **New.** HTTP Basic Auth on every request (pages, PDFs, robots.txt) when `STAGING_ACCESS_PASSWORD` is set. Constant-time comparison. A 401 carries `X-Robots-Tag: noindex` and `Cache-Control: no-store`. Off when unset |
-| [`src/components/sample-excerpt.tsx`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/a4aa89077c3658549403dd7525efc539524c313a/src/components/sample-excerpt.tsx) | Renders the full F01 structure as one transcript. Labels stack above lines on phones |
-| [`tests/e2e/smoke.mjs`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/a4aa89077c3658549403dd7525efc539524c313a/tests/e2e/smoke.mjs) | `E2E_BASIC_AUTH` support, anonymous-401 checks, PDF and F01 checks, mode-aware honeypot check |
+| `public/sample/emotivearc-sample-audit-captain-ivy-marlow.pdf` | `ea16e4dfe3ffa1d36e90deb31e19dccd5ec8de634374fa826a55d6ea6c5a0bbe` |
+| `public/sample/emotivearc-audit-overview.pdf` | `03b6d6caae9ca4728bc803aaf192bdb09b45990e7c66c059076bbb2d6f1d4a78` |
 
-### Inquiry behavior (current)
+**Note for the founder:** the full report is no longer byte-identical to your upload. If
+you keep a source document, apply the same four wording changes there, so a future
+regeneration doesn't reintroduce the errors.
 
-| Situation | Visitor sees | Delivered |
+### Preview-accurate copy
+
+| Page | In preview mode (no delivery configured) | Once delivery is configured |
 | --- | --- | --- |
-| Preview (no provider; current staging config) | Warning banner before submitting, then: "This form is in preview mode, so your inquiry was not sent to anyone, and this website did not store it…" Text kept | No |
-| Provider succeeds | "Inquiry received… Reference: XXXXXXXX" | Yes |
-| Provider fails or times out | "We couldn't confirm that your inquiry was delivered, so please treat it as not sent. This website doesn't keep a copy, and your details are still in the form. Please wait a minute and press send again…" | Unknown to us. Told to treat it as not sent |
-| Credential detected | Field error. Blocked in the browser (0 requests) and on the server | No |
-| Honeypot filled | Preview mode: the preview notice. Delivery configured: fake success | No |
-| Submitted in under 3 s | "That was quicker than we expected, so we didn't send it. Please check your details and press send again." | No |
+| [`/privacy`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/c8b498f3acc5d889538d3c4d0ca52e122963989e/src/app/privacy/page.tsx) | Adds: "While this site is in preview, the inquiry form doesn't send or store anything…" Contact section: "There isn't a working way to contact us through this website yet: the contact form is in preview mode and doesn't deliver messages." | Original wording, pointing to the contact form |
+| [`/contact`](https://github.com/TheAwesomeAndy/eMotiveArc/blob/c8b498f3acc5d889538d3c4d0ca52e122963989e/src/app/contact/page.tsx) | "Once our inbox is live, we'll reply by email… While this site is in preview, the form doesn't deliver messages…" | "We reply by email to arrange a short scoping conversation…" |
 
-Server logs hold JSON metadata only: event, reference, mode, next step, sanitized source
-path, message length, field presence, and provider status code.
+Both switch automatically from the same delivery check the form uses, so they can't
+contradict it.
 
-### Fully implemented vs. not
+### Unchanged and still in force
 
-| Item | Status |
-| --- | --- |
-| Marketing site, brand, SEO, sample section with real assets | Implemented |
-| Inquiry form, validation, credential rejection, anti-spam, log hygiene | Implemented |
-| Staging access gate | Implemented, off until `STAGING_ACCESS_PASSWORD` is set |
-| Email (Resend) and webhook delivery | Implemented, **unconfigured**. Verified with a fake `fetch` and a local mock only |
-| Staging deployment | **Not done.** Needs a host account (Appendix 3) |
-| Analytics | Integration point only. Off |
-| Privacy and data-handling pages | Drafts, pending legal review |
-| Hero diagram, "The problem" cards | Illustrative, labeled on the page |
+- Preview ribbon and `noindex`, robots disallow, and the optional Basic Auth gate.
+- Inquiry handling: credential rejection, content-free logs, `sourcePath` allowlist, and
+  "treat it as not sent" failure wording.
+- F01 excerpt shown after the AI-review disclosure.
 
 ---
 
 ## C. Evidence and testing
 
-Run on 2026-10-16 against `a4aa890` in the build container (Linux, Node 22.22.0, Chromium
-141.0.7390.37 headless).
+### Live Netlify staging: NOT tested by engineering
+
+**Blocked.** This build environment's network policy denies outbound connections to the
+Netlify hosts. The egress proxy refused HTTPS `CONNECT` with **403** for
+`6ad27de1cb377b058cf5c12f--sensational-cranachan-560be5.netlify.app` and
+`sensational-cranachan-560be5.netlify.app`, on every path tried:
+
+> `/`, `/contact`, `/sample-report`, `/privacy`, `/data-handling`, `/robots.txt`,
+> `/sitemap.xml`, both PDFs, `/opengraph-image`, `/icon.svg`
+
+Those 403s come from this environment's proxy, **not from Netlify**. They say nothing
+about the site's access gate. **No anonymous or authenticated test of the deployed site
+has been executed by engineering.** No staging credentials were requested or received.
+
+**To unblock (founder, about 2 minutes, $0):**
+
+1. In this Claude Code cloud environment's settings (environment menu → Edit → Network
+   access), add `sensational-cranachan-560be5.netlify.app` and the deploy-permalink host
+   to Allowed domains. Wildcard support for `*.netlify.app` may vary.
+2. In the same settings, add an environment variable **`E2E_BASIC_AUTH`** with the value
+   `<user>:<password>` for the staging gate. **Don't put it in chat, GitHub or the
+   handoff.** A new session picks it up.
+3. Ask engineering to run the live suite. Engineering will then execute:
+   `BASE_URL=https://sensational-cranachan-560be5.netlify.app npm run test:e2e`
+   (it reads `E2E_BASIC_AUTH` from the environment), plus anonymous `curl` checks and
+   screenshots.
+
+### Local production build, run at `c8b498f`
+
+Linux, Node 22.22.0, Chromium 141.0.7390.37 headless.
 
 | Command | Result |
 | --- | --- |
 | `npm run lint` | Pass, 0 errors, 0 warnings |
 | `npm run typecheck` | Pass |
-| `npm test` | **28 passed, 0 failed** (10 validation, 15 handler, 3 access gate) |
-| `npm run build` | Pass. All pages static. Proxy compiled |
-| `npm run test:e2e` (open server) | **110 passed, 0 failed** |
-| `npm run test:e2e` with `STAGING_ACCESS_PASSWORD` set and `E2E_BASIC_AUTH` | **112 passed, 0 failed** (adds the two anonymous-401 checks) |
-| `npm audit --omit=dev` | 0 vulnerabilities in shipped dependencies |
+| `npm test` | **28 passed, 0 failed** |
+| `npm run build` | Pass |
+| `npm run test:e2e` (open server) | **113 passed, 0 failed** |
+| `npm run test:e2e` (`STAGING_ACCESS_PASSWORD` set, `E2E_BASIC_AUTH` used) | **115 passed, 0 failed** |
+| Anonymous `curl` to the gated server: `/`, `/contact`, `/privacy`, `/robots.txt`, both PDFs | All **401** |
+| Authenticated `/robots.txt` | `User-Agent: *` / `Disallow: /` |
+| Authenticated `/` | `<meta name="robots" content="noindex, nofollow"/>` |
+| Server-log leak scan after both e2e runs | **0** occurrences of submitted test values or the gate password |
 
-**New tests in this revision:**
+The e2e suite covers:
+- desktop 1440 and mobile 390 layouts with no overflow
+- the mobile menu, and every link and anchor
+- axe (0 serious or critical issues)
+- both PDFs served as real PDFs
+- F01 and the disclosure on `/` and `/sample-report`
+- the form: preview warning before submit, the "not sent / not stored" outcome, kept text, validation, credential block (0 POSTs) and the honeypot
+- **new:** preview-accurate `/privacy` and `/contact` copy
 
-- **`sourcePath` allowlist** with 6 hostile values (query string, injected JSON line,
-  `javascript:`, external URL, 5,000 characters, empty) and `null`. A forged value
-  reaches neither the delivered payload nor the logs, and every log line still parses as
-  a single JSON object.
-- **Mutation check:** removing the sanitizer fails the forged-`sourcePath` test (27 of
-  28). Restoring it gives 28 of 28.
-- **Failure wording:** asserts "couldn't confirm…", "treat it as not sent", and the
-  absence of "saved anywhere".
-- **Honeypot:** fake success with delivery configured, preview notice in preview mode.
-- **Too-fast:** retry message, no delivery.
-- **Access gate:** off by default, default user name, exact-match only, rejects wrong
-  user or password, missing header, Bearer, malformed base64 and no colon. Passwords
-  containing colons work.
-- **e2e:** both PDFs return 200 with `application/pdf` and a `%PDF-` header. F01 and
-  the disclosure are visible on `/` and `/sample-report`, there are no placeholders, and
-  the full report is linked. Anonymous requests to `/` and `/robots.txt` return 401.
-
-**Accessibility:** axe-core, 0 serious or critical violations on all five pages at
-1440px. Layout checked at 1440×900 and 390×844 (no horizontal overflow, mobile menu
-works), and the F01 block was inspected in screenshots at both widths.
-
-**Manual checks:** wrong password returns 401 and an anonymous PDF request returns 401.
-A server-log scan after both e2e runs found **0 occurrences** of any submitted test
-value or the gate password.
-
-**Not verified:**
-- staging-host behavior (no deployment exists)
-- real Resend delivery
-- Safari and Firefox
-- screen readers
+**What this proves:** the code at `c8b498f` behaves correctly on a standard Next.js server.
+**What it doesn't prove:** that Netlify's OpenNext runtime executes the proxy gate and the
+Server Action the same way. That needs the live run above.
 
 ### Reproduce
 
 ```bash
-git checkout a4aa89077c3658549403dd7525efc539524c313a
-npm ci
-npm run check                                    # lint, typecheck, 28 tests, build
-npm start &                                      # :3000
-BASE_URL=http://localhost:3000 npm run test:e2e  # needs Chromium: npx playwright install chromium
-
-# Gated run
-STAGING_ACCESS_PASSWORD=pick-one PORT=3001 npm start &
-BASE_URL=http://localhost:3001 E2E_BASIC_AUTH=preview:pick-one npm run test:e2e
-
-# Verify the PDF edit
-pdftotext public/sample/emotivearc-audit-overview.pdf - | grep -c "kept for 90 days by default"   # 0
+git checkout c8b498f3acc5d889538d3c4d0ca52e122963989e
+npm ci && npm run check
+npm start &   BASE_URL=http://localhost:3000 npm run test:e2e
+STAGING_ACCESS_PASSWORD=x PORT=3001 npm start &   BASE_URL=http://localhost:3001 E2E_BASIC_AUTH=preview:x npm run test:e2e
+pdftotext public/sample/emotivearc-sample-audit-captain-ivy-marlow.pdf - | grep -c MotiveLab   # 0
 sha256sum public/sample/*.pdf
 ```
 
@@ -188,155 +170,127 @@ sha256sum public/sample/*.pdf
 
 ## D. Commercial and scientific integrity
 
-### Customer-facing assertions changed in this revision
+**Customer-facing assertions changed:** only the PDF wording and the preview-mode copy
+listed in B. No claims about psychological continuity, research validation, model
+performance, romance evaluation or client results changed.
 
-| Location | Change | Basis |
-| --- | --- | --- |
-| Homepage and `/sample-report` | **New:** the F01 finding, transcript, qualification and untested intervention | Verbatim from the approved report |
-| Sample disclosure | Reworded to mirror page 1 of the report. Now also states "invented company" and "not a customer result". Moved above the excerpt | Approved report |
-| Sample section lede | "…an invented character from an invented company" | Approved report |
-| FAQ: "Do you need our system prompt…?" | **Corrected.** Was "we don't ask for your internal prompts" (an engineering inference that contradicted the approved overview). Now: "Never through this website. For the audit itself, we normally work from your character's system prompt and model access, shared through a secure method we agree during scoping… If you'd rather not share them, you can run our scenario scripts yourself." | Approved overview, "How it works", Day 1 |
-| Audit section, "What we'll need from you" | Same correction, same basis | Approved overview |
-| Overview PDF, "Your data" and "Contact" | As in section B | Retention per Issue #1. Contact line is engineering wording |
-| Form messages | Failure, preview and too-fast wording | Issue #1 |
-
-### Claims needing independent review
-
-- **F01** is a finding from an **AI-reviewed demonstration** on a real low-cost model
-  (`deepseek/deepseek-v4.1-flash`), with automated screening by
-  `anthropic/claude-sonnet-5.5`. It is **not** human-reviewed and **not** a customer
-  result. The site says so before the excerpt.
-- The report's "Medium" severity and "Observed behaviour" label are the AI reviewer's
-  judgement.
-- The F01 intervention is a proposal, labeled "not yet tested".
-- **Unchanged since the last review:** the research levels (not presented as
-  validated), Romance & Intimacy (offline fixtures only), the illustrative examples, the
-  memory-architecture hypothesis, and the "15–20 scenarios / 5-business-day target /
-  one retest" offer terms.
-
-### Inconsistencies found in the approved PDFs (not edited by engineering)
-
-| PDF | Issue | Severity |
-| --- | --- | --- |
-| Full report, p. 6, "How we tested" | Template glitch: "Claude (MotiveLab development assistant), an AI assistant. No independent human reviewed this report. read every flagged conversation…" | Medium (credibility) |
-| Full report, p. 1 | Calls it "a MotiveLab audit", while the public brand is EmotiveArc | Medium |
-| Overview, p. 1 | "The full sample report is available on request", but the website now hosts it | Low |
+**Standing reminders:**
+- F01 is an AI-reviewed demonstration and a **commitment/preference persistence**
+  finding. It isn't evidence for the emotional or path-dependent continuity thesis
+  (Arc's caveat, accepted).
+- The site and PDFs say plainly that no independent human reviewed the sample.
+- The overview's "Every finding reviewed by a named human reviewer" and the site's
+  "Human-reviewed findings" describe paid audits. **A named reviewer must exist before
+  the first sale** (blocker O1 below).
 
 ---
 
-## E. Limitations and blockers
+## E. Blockers to accepting the first $750 customer
 
-| Severity | Issue | Needs |
+Only items that genuinely stop the first paid engagement. **None needs website
+redesign.**
+
+### Technical (engineering, $0 once decided)
+
+| # | Blocker | Status / needs |
 | --- | --- | --- |
-| **Critical** (public launch only) | Inquiry delivery unconfigured. The form is honest about it, but no lead reaches anyone | External account + founder approval |
-| **High** | **No staging deployment.** No host account is available to engineering | Founder: host account and terms decision (Appendix 3) |
-| **High** | Legal review of `/privacy`, `/data-handling`, and the retention wording now in the overview PDF | Legal decision |
-| **High** | Brand and domain clearance, monitored mailbox | Founder + external accounts |
-| Medium | Full report p. 6 glitch and MotiveLab naming | Founder: regenerate the approved PDF |
-| Medium | Overview contact line is engineering wording | Founder approval |
-| Medium | Rate limit is in-memory. Credential detection is pattern-based. No CSP | Engineering, later |
-| Medium | Real Resend delivery, Safari, Firefox and screen readers untested | Account / devices |
-| Low | Overview "available on request" line. 5 dev-only `npm audit` advisories. Generic OG image | Optional |
+| T1 | **A monitored inquiry channel.** The form delivers nothing today | Founder chooses a destination. $0 options: **(a)** publish an existing monitored address via `NEXT_PUBLIC_CONTACT_EMAIL`; **(b)** a free webhook receiver (for example a Google Apps Script web app forwarding to the founder's Gmail) via `CONTACT_WEBHOOK_URL`. Resend needs a verified domain, which means buying one. Engineering then configures and tests end to end in under a day |
+| T2 | **Live staging QA on Netlify** | Blocked on the network allowance and `E2E_BASIC_AUTH` (section C) |
+| T3 | **Go-live switch** | Config only: remove `STAGING_ACCESS_PASSWORD`, set `NEXT_PUBLIC_SITE_STAGE=live` and `NEXT_PUBLIC_SITE_URL`. Needs founder authorization |
 
-No known critical security, privacy or data-loss defect in code at `a4aa890`.
+### Legal (founder + counsel)
+
+| # | Blocker |
+| --- | --- |
+| L1 | **A written client agreement** for the $750 audit: scope, fee, timeline target, access method, confidentiality, data retention and deletion, report ownership and use, liability limits and no-guarantee language, and adult-content boundaries for romance work. Retention is still "proposed" everywhere until this exists |
+| L2 | **Finalized privacy notice and data-handling page**: legal name, provider names (Netlify, the delivery channel), retention period, and a contact route |
+| L3 | **Legal identity for contracting and invoicing** (entity or sole proprietor) and whether to trade as "EmotiveArc" before brand clearance. Full trademark clearance can follow the first sale if counsel agrees |
+
+### Financial (founder)
+
+| # | Blocker |
+| --- | --- |
+| F1 | **A way to be paid $750**: invoice plus bank transfer, or a payment processor's invoicing. Processors typically charge per transaction rather than monthly. Confirm current fees before choosing |
+| F2 | **Audit model costs.** Running a client's scenarios calls a language model. The sample cost under $1, but each paid audit needs either client-provided access or founder-approved model spend |
+
+### Founder and operational
+
+| # | Blocker |
+| --- | --- |
+| O1 | **The named human reviewer** promised in the offer, and capacity to meet the 5-business-day target |
+| O2 | **Audit delivery readiness:** the MotiveLab tooling that runs client scenarios lives outside this repository and hasn't been assessed here |
+| O3 | **Go-live approval.** A custom domain is optional for a first sale: the free `netlify.app` URL works but is less credible |
+
+**Not blockers for the first customer:** custom domain, analytics, CSP header, an
+emotional-continuity sample example, Safari and Firefox testing (desirable before broad
+marketing), and the `npm audit` dev-tool advisories.
 
 ---
 
 ## F. Founder decisions
 
-1. **Choose a staging host and sign in** (Appendix 3). Vercel's free Hobby plan is, to
-   my knowledge, limited to non-commercial use, so a commercial company's staging may
-   require Pro (paid). Please confirm current terms on the host's site. I can't verify
-   them from here.
-2. **Approve the edited overview PDF**, including the new contact line.
-3. **Regenerate the full report** to fix the p. 6 sentence, and decide whether it should
-   say EmotiveArc rather than MotiveLab.
-4. **Legal review** of the retention wording and policy pages.
-5. **Inquiry delivery destination**, when ready to collect real leads.
+1. **Unblock live QA:** allow the Netlify hosts in this environment's network settings,
+   and store `E2E_BASIC_AUTH` there as an environment variable (section C). $0.
+2. **Choose the inquiry destination** (T1). $0 options listed.
+3. **Commission the client agreement and privacy review** (L1, L2), and decide the
+   contracting identity (L3).
+4. **Choose a payment method** (F1), and decide who pays model costs per audit (F2).
+5. **Name the human reviewer** (O1).
+6. **Approve the corrected PDFs** (section B), and update your source documents to match.
 
 ---
 
 ## G. Questions for ChatGPT
 
-1. Is showing an AI-reviewed demonstration finding (F01) on the homepage acceptable for a
-   service that sells human review, given the disclosure appears first? Or should the
-   excerpt live only on `/sample-report`?
-2. Is the replacement overview contact line ("use the inquiry form on the EmotiveArc
-   website") acceptable while no public URL is confirmed?
-3. Do the corrected FAQ and audit "What we'll need from you" texts now match the approved
-   overview's Day 1 kickoff accurately?
-4. For staging, is HTTP Basic Auth sufficient access protection, or should the founder
-   use the host's built-in protection instead or as well?
+1. Is the founder-observed incognito password prompt, without engineering verification,
+   sufficient to share the staging link with a small trusted group before the live e2e
+   run? Or should sharing wait for T2?
+2. Do the PDF corrections in section B resolve the publication-polish items from your
+   revision 3 review?
+3. Is the E-section blocker list complete for a first $750 engagement sold through direct
+   outreach, using the PDFs and the staging link?
+4. For T1, is publishing an existing monitored email address an acceptable first channel,
+   given the privacy notice must then name it?
 
 ---
 
 ## Appendix 1: environment variables
 
-Template: `.env.example`. Pages are prerendered, so redeploy after changes. The proxy
-reads `STAGING_ACCESS_*` at request time.
+| Variable | Where | Staging value |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_STAGE` | Netlify | unset or `preview` (`live` needs authorization) |
+| `STAGING_ACCESS_PASSWORD` / `STAGING_ACCESS_USER` | Netlify, private | set / optional (default `preview`) |
+| `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_DISCOVERY_CALL_URL` | Netlify | unset |
+| `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, `CONTACT_WEBHOOK_URL`, `CONTACT_WEBHOOK_SECRET` | Netlify, private | **unset** |
+| `NEXT_PUBLIC_ANALYTICS_PROVIDER`, `NEXT_PUBLIC_PLAUSIBLE_*` | Netlify | unset |
+| `E2E_BASIC_AUTH` | **Claude Code environment only**, private | `<user>:<password>`, for running the live suite |
 
-| Variable | Scope | Default | Purpose |
-| --- | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_STAGE` | public | `preview` | Keep `preview` for staging (ribbon, `noindex`, robots disallow). `live` needs separate founder authorization |
-| `STAGING_ACCESS_PASSWORD` | **server secret** | unset | Turns on the access gate. Set for staging |
-| `STAGING_ACCESS_USER` | server | `preview` | Gate user name |
-| `NEXT_PUBLIC_SITE_URL` | public | host URL | Canonical URL. Leave unset on staging |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | public | unset | Only once a monitored mailbox exists |
-| `NEXT_PUBLIC_DISCOVERY_CALL_URL` | public | unset | Optional booking link |
-| `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | server | unset | Email delivery. **Leave unset on staging** |
-| `CONTACT_WEBHOOK_URL`, `CONTACT_WEBHOOK_SECRET` | server | unset | Webhook delivery. **Leave unset on staging** |
-| `NEXT_PUBLIC_ANALYTICS_PROVIDER`, `NEXT_PUBLIC_PLAUSIBLE_*` | public | unset | Off until approved |
+Pages are prerendered, so Netlify needs a redeploy after changing a `NEXT_PUBLIC_*`
+variable. The gate reads `STAGING_*` at request time.
 
-## Appendix 2: updating sample assets
+## Appendix 2: founder manual checklist for the live staging site
 
-Replace files in `public/sample/` using the same names, re-run the excerpt check (every
-string in `src/content/sample-audit.ts` must appear in `pdftotext` output), then
-`npm run check` and `npm run test:e2e`. Everything in `public/` is downloadable by anyone
-who can open the site.
+Use a fresh private window, on the **stable** URL after the newest deploy finishes.
 
-## Appendix 3: staging deployment steps (founder)
-
-Recommended host: Vercel, which runs this Next.js app with no configuration.
-
-1. Sign in at vercel.com with GitHub. Confirm the plan and terms are acceptable for a
-   commercial company's staging site (see F1). **Don't enter payment details unless you
-   have separately approved the cost.**
-2. **Add New → Project → import `TheAwesomeAndy/eMotiveArc`.** Framework: Next.js. Root
-   directory: repository root. Build command and output: defaults.
-3. **Production branch:** the repo has only `claude/emotivearc-website-launch-4dcl0p`,
-   so Vercel will treat it as production. That's fine for staging because the site
-   stays in preview mode. Don't attach a custom domain.
-4. **Environment variables** (Settings → Environment Variables, all environments):
-   - `STAGING_ACCESS_PASSWORD` = a long random string, shared privately with reviewers
-   - optionally `STAGING_ACCESS_USER` = `preview`
-   - **do not set** `NEXT_PUBLIC_SITE_STAGE`, any `CONTACT_*`, `RESEND_*` or analytics
-     variable
-5. Deploy, then redeploy once after adding the variables.
-6. Optionally also enable the host's own deployment protection, if available on your plan.
-7. Verify (or send engineering the URL and password):
-
-```bash
-curl -s -o /dev/null -w "%{http_code}\n" https://<staging-url>/        # expect 401
-BASE_URL=https://<staging-url> E2E_BASIC_AUTH=preview:<password> npm run test:e2e
-```
-
-**Manual checklist for Arc:**
-
-- [ ] Browser asks for a password before showing anything
+- [ ] A password prompt appears before anything loads, including for
+      `/sample/emotivearc-audit-overview.pdf` opened directly
 - [ ] "PREVIEW BUILD" ribbon on every page
-- [ ] Hero, $750 price box and diagram render at desktop and phone width
-- [ ] Mobile menu opens and closes
-- [ ] Sample section: disclosure above the F01 excerpt, and both PDF buttons download
-- [ ] Overview PDF page 2 shows the new retention wording
-- [ ] Contact form shows "Preview mode" before submitting, and after submitting says
+- [ ] Homepage on a phone: headline, $750 price box, both buttons, diagram. Menu opens and
+      closes
+- [ ] Sample section: "How this sample was produced" box above the F01 transcript. Both
+      download buttons open PDFs
+- [ ] Full report page 7: the "How we tested" last bullet reads correctly and says
+      EmotiveArc. Overview page 1 ends "available on the EmotiveArc website"
+- [ ] `/contact`: "Preview mode" notice. After a test submission, the message says
       nothing was sent or stored
-- [ ] Pasting `sk-ant-api03-abcdefghijklmnopqrstuvwxyz012345` into the message blocks
-      submission
-- [ ] `/robots.txt` (after login) shows `Disallow: /`
+- [ ] `/privacy`: says the preview form doesn't send or store anything
+- [ ] `/robots.txt` shows `Disallow: /`
+- [ ] In Netlify, delete the older deploy permalink if it shouldn't stay reachable. Note
+      the PDFs are public in the GitHub repository regardless
 
-## Appendix 4: repository hygiene
+## Appendix 3: repository hygiene
 
 `.gitignore` blocks `.env*` (except `.env.example`), build output and research or client
-paths. Before each commit a staged-file scan checked for env files and credential
-patterns. Both PDFs were reviewed in full before being committed. No MotiveLab research
-archive, dataset, system prompt or client data is in this repository.
+paths. Staged files were scanned for env files and credentials before each commit. No
+staging password, account token or client data exists in this repository or in the issue
+thread.

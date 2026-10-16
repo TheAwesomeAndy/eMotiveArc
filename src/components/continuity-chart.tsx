@@ -156,7 +156,8 @@ export function ContinuityChart() {
       </svg>
 
       <figcaption className="relative mt-3 border-t border-paper/10 pt-4 text-[0.82rem] leading-relaxed text-paper/60">
-        Both versions can recall the apology. Only one behaves as if the relationship changed. A
+        One possible trajectory, for illustration: repair doesn&apos;t always restore trust. Both
+        versions can recall the apology. Only one behaves as if the relationship changed. A
         continuity audit tests for the difference.
       </figcaption>
     </figure>

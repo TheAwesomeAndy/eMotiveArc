@@ -132,6 +132,12 @@ for (const vp of [
   await page.goto(BASE + "/", { waitUntil: "networkidle" });
   const hero = page.locator("#trace-desc");
   check(/broken/.test(await hero.textContent()) && /apology/.test(await hero.textContent()), "hero diagram describes rupture and repair");
+  const range = page.getByRole("list", { name: "Examples of experiences" });
+  for (const e of ["Joy", "Grief", "Shame", "Humiliation", "Desire", "Resilience"]) {
+    check((await range.getByText(e, { exact: true }).count()) === 1, `evaluate range includes ${e}`);
+  }
+  check((await page.locator("#romance").getByText(/erotic desire/).count()) > 0, "romance names erotic desire");
+  check((await page.getByText("Loss is recalled, not felt").count()) === 0, "no copy implies a model feels");
   for (const kind of ["Positive", "Negative", "Mixed", "Evolving"]) {
     check((await page.locator("#problem").getByText(kind, { exact: true }).count()) > 0, `problem examples include a ${kind.toLowerCase()} experience`);
   }

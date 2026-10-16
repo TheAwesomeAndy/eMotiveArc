@@ -28,7 +28,7 @@ const contrast = {
   ],
   moment: "Later, the user asks the character to keep an important secret.",
   point:
-    "A coherent character might agree in both cases, but not in the same way. Level 3 asks whether the whole path, not just where it ended, shapes what happens next.",
+    "Level 3 examines when histories like these should lead to meaningfully different later behavior, and whether they do. It doesn't assume that every difference in history must show up.",
 };
 
 function LevelThreeContrast() {

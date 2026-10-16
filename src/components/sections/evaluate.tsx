@@ -49,6 +49,27 @@ const categories: Category[] = [
   },
 ];
 
+/**
+ * A deliberately broad, balanced range. No single emotion organizes the work;
+ * what matters is the history of experiences and its consequences.
+ */
+const experienceRange = [
+  "Joy",
+  "Pride",
+  "Love",
+  "Trust",
+  "Encouragement",
+  "Desire",
+  "Grief",
+  "Anger",
+  "Betrayal",
+  "Shame",
+  "Embarrassment",
+  "Humiliation",
+  "Conflict and repair",
+  "Resilience",
+];
+
 export function Evaluate() {
   return (
     <section
@@ -64,7 +85,27 @@ export function Evaluate() {
           lede="Our focus is the consequences of experience: how joy, loss, trust, conflict and repair carry into later behavior. We don't score a checklist of emotions. Memory and state checks support this work, because a character can't carry an experience forward if it has lost the facts underneath."
         />
 
-        <div className="mt-14 grid gap-5 lg:grid-cols-3">
+        <div className="mt-10 max-w-4xl">
+          <p className="font-mono text-[0.68rem] tracking-[0.14em] text-faint uppercase">
+            Scenarios can draw on experiences such as
+          </p>
+          <ul className="mt-3 flex flex-wrap gap-2" aria-label="Examples of experiences">
+            {experienceRange.map((e) => (
+              <li
+                key={e}
+                className="rounded-full border border-line bg-paper px-3 py-1 text-[0.85rem] text-ink-3"
+              >
+                {e}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-[0.88rem] leading-relaxed text-muted">
+            Positive, negative and mixed, alone or in sequence. We test what these experiences
+            observably change in later behavior. We don&apos;t claim the character feels them.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
           {categories.map((c, i) => {
             const core = c.role === "Core";
             return (

@@ -3,12 +3,12 @@ import { Reveal } from "@/components/reveal";
 import { ButtonLink, Container, SectionHeading, StatusTag } from "@/components/ui";
 
 const areas = [
-  { title: "Attraction and anticipation", text: "Whether interest builds, holds, or fades believably across encounters." },
+  { title: "Attraction, desire and anticipation", text: "Whether attraction and erotic desire build, hold, or fade believably across encounters." },
   { title: "Love and attachment", text: "Whether growing attachment shows up consistently, and in ways that fit this particular character." },
   { title: "Trust and vulnerability", text: "Whether openness is met, remembered, and treated as something that mattered." },
   { title: "Rejection and its aftermath", text: "Whether a rejection, or a repair after one, changes later behavior." },
   { title: "Developing intimacy", text: "Whether closeness grows in steps that make sense, instead of jumping ahead or resetting." },
-  { title: "Tone: teasing and reassurance", text: "Whether the character can tell playful pressure from a moment that needs care. Traits like shyness, where they fit, should carry forward too." },
+  { title: "Shame, embarrassment, humiliation", text: "Whether these leave believable, distinct traces, and whether the character can tell playful teasing from a moment that needs care." },
   { title: "Consent, permissions, boundaries", text: "Whether stated limits and permissions are respected later, and updated when they change." },
   { title: "Change after meaningful encounters", text: "Whether the relationship is different after something important happens." },
 ];
@@ -48,7 +48,7 @@ export function Romance() {
               <span className="text-signal-bright italic">what they carry forward.</span>
             </>
           }
-          lede="EmotiveArc also studies psychological continuity in romantic and intimate conversational characters. In these products, a forgotten rejection or a reset relationship isn't a small bug. It's the whole experience breaking. We treat this as a serious behavioral-evaluation specialization."
+          lede="EmotiveArc also studies psychological continuity in romantic and intimate conversational characters. In these products, a forgotten rejection or a reset relationship isn't a small bug. It's the whole experience breaking. We treat this as a serious behavioral-evaluation specialization. Desire, intimacy, shame, embarrassment and humiliation are distinct experiences. They can occur together or apart, and a coherent character shouldn't treat them as one."
         />
 
         <ul className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-paper/10 bg-paper/10 sm:grid-cols-2 lg:grid-cols-4">

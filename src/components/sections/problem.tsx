@@ -33,7 +33,7 @@ const failures: Failure[] = [
   {
     icon: CloudRain,
     kind: "Negative",
-    title: "Loss is recalled, not felt",
+    title: "Loss is recalled without its significance",
     earlier: "The user tells the character about a painful loss.",
     later: "Memory brings up the detail later, mentioned casually, with none of its weight.",
   },

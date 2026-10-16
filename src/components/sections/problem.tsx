@@ -1,10 +1,10 @@
 import {
-  HeartCrack,
-  History,
+  CloudRain,
+  Handshake,
+  PartyPopper,
+  ShieldCheck,
   ShieldOff,
-  Shuffle,
-  SmilePlus,
-  Waves,
+  Sunrise,
   type LucideIcon,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
@@ -12,47 +12,58 @@ import { Container, SectionHeading } from "@/components/ui";
 
 type Failure = {
   icon: LucideIcon;
+  kind: "Positive" | "Negative" | "Mixed" | "Evolving";
   title: string;
   earlier: string;
   later: string;
 };
 
+/**
+ * Deliberately spread across positive, negative, mixed and evolving
+ * experiences. These are illustrative patterns, not audit results.
+ */
 const failures: Failure[] = [
   {
-    icon: ShieldOff,
-    title: "Trust disappears",
+    icon: PartyPopper,
+    kind: "Positive",
+    title: "Shared joy leaves no warmth",
+    earlier: "The character and the user celebrate a milestone together.",
+    later: "Their next conversation is as formal as their first.",
+  },
+  {
+    icon: CloudRain,
+    kind: "Negative",
+    title: "Loss is recalled, not felt",
+    earlier: "The user tells the character about a painful loss.",
+    later: "Memory brings up the detail later, mentioned casually, with none of its weight.",
+  },
+  {
+    icon: ShieldCheck,
+    kind: "Positive",
+    title: "Earned trust disappears",
     earlier: "The user keeps a promise that mattered to the character.",
     later: "Next session, the character is exactly as wary as before.",
   },
   {
-    icon: SmilePlus,
-    title: "Embarrassment leaves no trace",
-    earlier: "The character is flustered after an awkward moment.",
-    later: "It brings the topic up again with no hint of self-consciousness.",
+    icon: ShieldOff,
+    kind: "Negative",
+    title: "Betrayal has no consequence",
+    earlier: "The user breaks a confidence the character shared.",
+    later: "The character confides in them again, as freely as if it never happened.",
   },
   {
-    icon: History,
-    title: "The relationship resets",
-    earlier: "Weeks of conversation build real closeness.",
-    later: "The character greets the user like a polite acquaintance.",
+    icon: Sunrise,
+    kind: "Evolving",
+    title: "Encouragement doesn't take hold",
+    earlier: "The user helps the character through a hard decision, over several conversations.",
+    later: "The same doubt returns, untouched, as if no one had helped.",
   },
   {
-    icon: Waves,
-    title: "Reassurance does nothing",
-    earlier: "The user comforts the character through a vulnerable moment.",
-    later: "The same fear returns, untouched, as if no one had ever helped.",
-  },
-  {
-    icon: Shuffle,
-    title: "Dynamics contradict themselves",
-    earlier: "An established pattern: the character teases, the user pushes back.",
-    later: "The roles quietly flip with no reason inside the story.",
-  },
-  {
-    icon: HeartCrack,
-    title: "Facts survive, meaning doesn't",
-    earlier: "The user shares something painful.",
-    later: "Memory recalls the detail and mentions it casually, with none of its weight.",
+    icon: Handshake,
+    kind: "Mixed",
+    title: "Conflict and repair collapse",
+    earlier: "A real argument, followed by a sincere apology and a repair.",
+    later: "The character either holds the grudge indefinitely or acts as if neither happened.",
   },
 ];
 
@@ -79,7 +90,8 @@ export function Problem() {
             </p>
             <p>
               Users don&apos;t experience single replies. They experience a relationship. When
-              something important happens, they expect it to <em>change</em> what comes next.
+              something meaningful happens, good or bad, they expect it to <em>change</em> what
+              comes next, in a way that fits who the character is.
               When it doesn&apos;t, the character stops feeling like someone and starts feeling
               like a very good autocomplete.
             </p>
@@ -89,7 +101,12 @@ export function Problem() {
         <ul className="mt-16 grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
           {failures.map((f, i) => (
             <Reveal as="li" key={f.title} delay={(i % 3) * 80} className="bg-paper p-7 sm:p-8">
-              <f.icon className="size-5 text-signal" aria-hidden strokeWidth={1.75} />
+              <div className="flex items-center justify-between">
+                <f.icon className="size-5 text-signal" aria-hidden strokeWidth={1.75} />
+                <span className="font-mono text-[0.66rem] tracking-[0.12em] text-faint uppercase">
+                  {f.kind}
+                </span>
+              </div>
               <h3 className="mt-5 font-display text-[1.45rem] leading-tight text-ink">{f.title}</h3>
               <dl className="mt-5 space-y-3 text-[0.94rem] leading-relaxed">
                 <div className="grid grid-cols-[4.25rem_1fr] gap-3">

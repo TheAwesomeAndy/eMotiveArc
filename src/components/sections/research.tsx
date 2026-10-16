@@ -15,9 +15,52 @@ const levels = [
   {
     level: "Level 3",
     title: "Path-dependent state evolution",
-    question: "Does the character's state develop differently depending on the path of experiences that led there?",
+    question:
+      "Does the character's state depend on the whole sequence of experiences that led there, not just the most recent one?",
   },
 ];
+
+/** Illustrative only: two histories that end at the same moment. */
+const contrast = {
+  sequences: [
+    { label: "Sequence A", steps: ["Trust built", "Broken once", "Sincerely repaired"] },
+    { label: "Sequence B", steps: ["Trust built", "Never tested"] },
+  ],
+  moment: "Later, the user asks the character to keep an important secret.",
+  point:
+    "A coherent character might agree in both cases, but not in the same way. Level 3 asks whether the whole path, not just where it ended, shapes what happens next.",
+};
+
+function LevelThreeContrast() {
+  return (
+    <div className="rounded-2xl border border-line bg-paper-2/60 p-5 sm:col-span-2">
+      <p className="font-mono text-[0.66rem] tracking-[0.14em] text-faint uppercase">
+        Illustrative contrast
+      </p>
+      <ul className="mt-3 space-y-2">
+        {contrast.sequences.map((seq) => (
+          <li key={seq.label} className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.88rem]">
+            <span className="w-full shrink-0 font-mono text-[0.7rem] tracking-[0.08em] text-arc uppercase sm:w-24">
+              {seq.label}
+            </span>
+            {seq.steps.map((step, i) => (
+              <span key={step} className="flex items-center gap-2 text-ink-3">
+                {i > 0 ? (
+                  <span aria-hidden className="text-faint">
+                    →
+                  </span>
+                ) : null}
+                {step}
+              </span>
+            ))}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 text-[0.88rem] leading-relaxed text-ink-3">{contrast.moment}</p>
+      <p className="mt-1 text-[0.88rem] leading-relaxed text-muted">{contrast.point}</p>
+    </div>
+  );
+}
 
 /** Small diagram: three nested trajectories of increasing complexity. */
 function LevelGlyph({ n }: { n: number }) {
@@ -79,6 +122,7 @@ export function Research() {
                     <p className="mt-2 text-[0.93rem] leading-relaxed text-muted">{l.question}</p>
                   </div>
                   <LevelGlyph n={i + 1} />
+                  {i === 2 ? <LevelThreeContrast /> : null}
                 </Reveal>
               ))}
             </ol>

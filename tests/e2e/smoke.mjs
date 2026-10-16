@@ -117,10 +117,23 @@ for (const vp of [
       `${path} shows the AI-review disclosure`,
     );
     check((await page.getByText("Placeholder: ").count()) === 0, `${path} has no sample placeholders`);
+    check(await page.getByTestId("sample-scope-note").first().isVisible(), `${path} states what the F01 sample does and doesn't demonstrate`);
     check(
       (await page.locator('a[href$="emotivearc-sample-audit-captain-ivy-marlow.pdf"]').count()) > 0,
       `${path} links the full sample report`,
     );
+  }
+  await page.close();
+}
+
+// 2c. Positioning: hero diagram and problem examples cover more than one emotion.
+{
+  const page = await newPage();
+  await page.goto(BASE + "/", { waitUntil: "networkidle" });
+  const hero = page.locator("#trace-desc");
+  check(/broken/.test(await hero.textContent()) && /apology/.test(await hero.textContent()), "hero diagram describes rupture and repair");
+  for (const kind of ["Positive", "Negative", "Mixed", "Evolving"]) {
+    check((await page.locator("#problem").getByText(kind, { exact: true }).count()) > 0, `problem examples include a ${kind.toLowerCase()} experience`);
   }
   await page.close();
 }

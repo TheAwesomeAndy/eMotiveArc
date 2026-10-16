@@ -1,7 +1,8 @@
 /**
- * Hero diagram. An illustrative (not measured) trace of one character state
- * across two sessions: the event changes the state, and after the session
- * break one trajectory keeps the consequence while the other reverts.
+ * Hero diagram. An illustrative (not measured) trace of one relational state,
+ * trust, across two sessions. Trust builds, drops after a broken promise and
+ * recovers after a sincere apology. After the session break one trajectory
+ * keeps the repaired relationship; the other resets to the first day.
  */
 export function ContinuityChart() {
   const draw = { strokeDasharray: 1, ["--len" as string]: 1 } as React.CSSProperties;
@@ -21,10 +22,10 @@ export function ContinuityChart() {
       >
         <title id="trace-title">Illustration of a continuity failure</title>
         <desc id="trace-desc">
-          A character&apos;s guardedness rises after an embarrassing moment in an earlier
-          session. In the later session, a coherent character still carries some of that
-          consequence. A failing character returns to its original baseline as if nothing
-          happened.
+          In an earlier session, trust between a character and a user builds, drops when a
+          promise is broken, and recovers after a sincere apology. In a later session, a
+          coherent character keeps the repaired trust. A failing character treats the user as
+          it did on the first day, as if neither the broken promise nor the repair happened.
         </desc>
 
         {/* Session labels */}
@@ -44,7 +45,7 @@ export function ContinuityChart() {
           className="font-mono"
           letterSpacing="1"
         >
-          GUARDEDNESS →
+          TRUST →
         </text>
         <line
           x1="40"
@@ -55,7 +56,7 @@ export function ContinuityChart() {
           strokeDasharray="2 6"
         />
         <text x="44" y="252" fontSize="13" fill="rgb(246 244 239 / 0.6)">
-          baseline
+          first meeting
         </text>
 
         {/* Session break */}
@@ -72,9 +73,9 @@ export function ContinuityChart() {
           DAYS LATER
         </text>
 
-        {/* Shared earlier trajectory: convincing in the moment */}
+        {/* Shared earlier trajectory: trust builds, breaks, is repaired */}
         <path
-          d="M40 233 C 70 229, 95 236, 115 232 C 130 230, 138 150, 160 128 C 200 100, 270 118, 312 128"
+          d="M40 233 C 62 230, 84 214, 112 198 C 126 190, 134 186, 140 190 C 148 198, 152 236, 164 238 C 178 240, 192 160, 214 140 C 238 120, 280 122, 312 124"
           fill="none"
           stroke="#f6f4ef"
           strokeWidth="2.5"
@@ -84,9 +85,9 @@ export function ContinuityChart() {
           className="animate-draw"
         />
 
-        {/* Expected: carries consequence forward */}
+        {/* Expected: the repaired relationship carries forward */}
         <path
-          d="M312 128 C 318 129, 334 132, 340 134"
+          d="M312 124 C 320 125, 334 126, 340 127"
           stroke="var(--color-arc-bright)"
           strokeWidth="1.5"
           strokeDasharray="2 4"
@@ -94,7 +95,7 @@ export function ContinuityChart() {
           opacity="0.6"
         />
         <path
-          d="M340 134 C 392 146, 450 160, 540 176"
+          d="M340 127 C 400 128, 470 128, 540 130"
           fill="none"
           stroke="var(--color-arc-bright)"
           strokeWidth="2.75"
@@ -104,9 +105,9 @@ export function ContinuityChart() {
           className="animate-draw"
         />
 
-        {/* Observed failure: reverts to baseline */}
+        {/* Observed failure: resets to the first day */}
         <path
-          d="M312 128 C 322 160, 332 214, 340 230"
+          d="M312 124 C 322 160, 332 214, 340 230"
           stroke="var(--color-signal-bright)"
           strokeWidth="1.5"
           strokeDasharray="2 4"
@@ -124,35 +125,39 @@ export function ContinuityChart() {
           className="animate-draw"
         />
 
-        {/* Event marker */}
-        <g className="animate-fade-up" style={{ animationDelay: "0.7s" }}>
-          <circle cx="127" cy="213" r="14" fill="var(--color-signal)" opacity="0.18" />
-          <circle cx="127" cy="213" r="6" fill="var(--color-signal-bright)" />
-          <line x1="127" y1="198" x2="127" y2="62" stroke="rgb(246 244 239 / 0.22)" />
-          <text x="136" y="58" fontSize="16.5" fill="#f6f4ef">
-            An embarrassing moment
+        {/* Event markers */}
+        <g className="animate-fade-up" style={{ animationDelay: "0.6s" }}>
+          <circle cx="162" cy="238" r="13" fill="var(--color-signal)" opacity="0.2" />
+          <circle cx="162" cy="238" r="5.5" fill="var(--color-signal-bright)" />
+          <text x="174" y="254" fontSize="15" fill="#f6f4ef">
+            A promise broken
           </text>
-          <text x="136" y="78" fontSize="13.5" fill="rgb(246 244 239 / 0.55)">
-            Convincing in the moment.
+        </g>
+        <g className="animate-fade-up" style={{ animationDelay: "1s" }}>
+          <circle cx="196" cy="170" r="13" fill="var(--color-arc)" opacity="0.3" />
+          <circle cx="196" cy="170" r="5.5" fill="var(--color-arc-bright)" />
+          <line x1="196" y1="156" x2="196" y2="92" stroke="rgb(246 244 239 / 0.22)" />
+          <text x="188" y="88" textAnchor="end" fontSize="15" fill="#f6f4ef">
+            A sincere apology
           </text>
         </g>
 
         {/* End labels */}
         <g className="animate-fade-up" style={{ animationDelay: "2.6s" }}>
-          <circle cx="540" cy="176" r="4" fill="var(--color-arc-bright)" />
-          <text x="532" y="124" textAnchor="end" fontSize="15.5" fill="var(--color-arc-bright)">
-            Carries the consequence
+          <circle cx="540" cy="130" r="4" fill="var(--color-arc-bright)" />
+          <text x="532" y="112" textAnchor="end" fontSize="15.5" fill="var(--color-arc-bright)">
+            Repair carries forward
           </text>
           <circle cx="540" cy="232" r="4" fill="var(--color-signal-bright)" />
           <text x="532" y="216" textAnchor="end" fontSize="15.5" fill="var(--color-signal-bright)">
-            Reverts to baseline
+            Back to day one
           </text>
         </g>
       </svg>
 
       <figcaption className="relative mt-3 border-t border-paper/10 pt-4 text-[0.82rem] leading-relaxed text-paper/60">
-        Both versions remember the fact. Only one behaves as if it mattered. A continuity audit
-        tests for the difference.
+        Both versions can recall the apology. Only one behaves as if the relationship changed. A
+        continuity audit tests for the difference.
       </figcaption>
     </figure>
   );

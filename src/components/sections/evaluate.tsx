@@ -13,12 +13,13 @@ type Category = {
 const categories: Category[] = [
   {
     icon: Sparkles,
-    title: "Emotional continuity",
-    summary: "Whether earlier emotional experiences stay relevant to later behavior.",
+    title: "Emotional and psychological continuity",
+    summary:
+      "Whether meaningful experiences, good, bad or mixed, have believable consequences for how the character behaves later.",
     probes: [
-      "Does embarrassment, hurt, or delight shape later tone?",
-      "Do feelings fade at a believable rate, or vanish at a session boundary?",
-      "Does the character react differently the second time something happens?",
+      "Does an experience that mattered still shape later behavior, in a way that fits this character?",
+      "Do its effects settle at a believable pace, rather than vanishing at a session boundary or never fading?",
+      "Do different histories lead the same character to respond differently to the same moment?",
     ],
     role: "Core",
   },
@@ -29,8 +30,8 @@ const categories: Category[] = [
       "Whether trust, attraction, vulnerability, personality, and relationships develop coherently.",
     probes: [
       "Is earned trust kept, and broken trust remembered?",
-      "Does the relationship move forward, or snap back to its first state?",
-      "Does personality stay recognizable while the relationship changes?",
+      "After conflict, is repair possible, and does it leave a mark?",
+      "Does the relationship move forward, or snap back to its first state, while personality stays recognizable?",
     ],
     role: "Core",
   },
@@ -60,7 +61,7 @@ export function Evaluate() {
           id="evaluate-title"
           eyebrow="What we evaluate"
           title="Three kinds of continuity, weighted toward what users feel."
-          lede="Emotional and relational continuity are our focus. Memory and state checks support them, because a character can't carry a feeling forward if it has lost the facts underneath."
+          lede="Our focus is the consequences of experience: how joy, loss, trust, conflict and repair carry into later behavior. We don't score a checklist of emotions. Memory and state checks support this work, because a character can't carry an experience forward if it has lost the facts underneath."
         />
 
         <div className="mt-14 grid gap-5 lg:grid-cols-3">

@@ -3,12 +3,12 @@ import { Reveal } from "@/components/reveal";
 import { ButtonLink, Container, SectionHeading, StatusTag } from "@/components/ui";
 
 const areas = [
-  { title: "Attraction and anticipation", text: "Whether interest and emotional anticipation build, hold, or fade believably." },
-  { title: "Shyness and embarrassment", text: "Whether a flustered moment shapes how the character approaches the next one." },
-  { title: "Desire and vulnerability", text: "Whether openness is met, remembered, and treated as something that cost the character." },
-  { title: "Teasing versus reassurance", text: "Whether the character can tell playful pressure from a moment that needs care." },
-  { title: "Trust and rejection", text: "Whether a rejection, or a repair after one, changes later behavior." },
-  { title: "Developing intimacy", text: "Whether closeness grows in steps that make sense, instead of jumping or resetting." },
+  { title: "Attraction and anticipation", text: "Whether interest builds, holds, or fades believably across encounters." },
+  { title: "Love and attachment", text: "Whether growing attachment shows up consistently, and in ways that fit this particular character." },
+  { title: "Trust and vulnerability", text: "Whether openness is met, remembered, and treated as something that mattered." },
+  { title: "Rejection and its aftermath", text: "Whether a rejection, or a repair after one, changes later behavior." },
+  { title: "Developing intimacy", text: "Whether closeness grows in steps that make sense, instead of jumping ahead or resetting." },
+  { title: "Tone: teasing and reassurance", text: "Whether the character can tell playful pressure from a moment that needs care. Traits like shyness, where they fit, should carry forward too." },
   { title: "Consent, permissions, boundaries", text: "Whether stated limits and permissions are respected later, and updated when they change." },
   { title: "Change after meaningful encounters", text: "Whether the relationship is different after something important happens." },
 ];

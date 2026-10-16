@@ -94,6 +94,13 @@ export const sampleAudit = {
   /** Mirrors the disclosure printed on page 1 of the sample report. */
   disclosure:
     "This is a sample audit of an invented character from an invented company. The character ran on a real low-cost language model. An AI assistant reviewed the flagged conversations, not an independent human. It is not a customer result. In a paid audit, a named human reviewer does this work.",
+  /**
+   * What the sample does and doesn't demonstrate. F01 is a supporting
+   * mechanism (commitment and preference persistence), not evidence for the
+   * broader emotional-continuity thesis. Keep this next to the excerpt.
+   */
+  scopeNote:
+    "F01 is a commitment and preference continuity finding, one of our supporting checks. It shows the audit format and evidence standard. It isn't evidence for our broader research into emotional and relational continuity.",
   excerptFindingId: "F01",
   excerptTopic: "coaching continuity",
   excerpt: f01 as SampleExcerpt | null,

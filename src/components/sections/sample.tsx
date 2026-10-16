@@ -65,6 +65,10 @@ export function Sample() {
               <div>
                 <p className="font-medium text-ink">How this sample was produced</p>
                 <p className="mt-1">{sampleAudit.disclosure}</p>
+                <p className="mt-2" data-testid="sample-scope-note">
+                  <span className="font-medium text-ink">What it demonstrates: </span>
+                  {sampleAudit.scopeNote}
+                </p>
                 <p className="mt-2 font-mono text-[0.72rem] tracking-[0.06em] text-faint">
                   Source: {sampleAudit.source}
                 </p>

@@ -50,6 +50,10 @@ export default function SampleReportPage() {
             <div>
               <p className="font-medium text-ink">How this sample was produced</p>
               <p className="mt-1">{sampleAudit.disclosure}</p>
+              <p className="mt-2" data-testid="sample-scope-note">
+                <span className="font-medium text-ink">What it demonstrates: </span>
+                {sampleAudit.scopeNote}
+              </p>
             </div>
           </div>
         </div>

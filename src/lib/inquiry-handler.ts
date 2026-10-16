@@ -1,5 +1,5 @@
 import "server-only";
-import { publicContactEmail } from "./config";
+import { getLeadDeliveryMode, publicContactEmail } from "./config";
 import { deliverLead, logInquiryEvent } from "./lead-delivery";
 import {
   fieldsWithSecrets,
@@ -20,6 +20,19 @@ export type RequestContext = {
   makeRef?: () => string;
 };
 
+/**
+ * Pages that render the inquiry form. `sourcePath` arrives from the browser,
+ * so anything outside this list is reported as "other" before it reaches
+ * logs or delivered messages.
+ */
+export const KNOWN_SOURCE_PATHS = ["/", "/contact", "/sample-report"] as const;
+
+export function sanitizeSourcePath(raw: FormDataEntryValue | null): string {
+  return typeof raw === "string" && (KNOWN_SOURCE_PATHS as readonly string[]).includes(raw)
+    ? raw
+    : "other";
+}
+
 const defaultRef = () => crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase();
 
 export function retryMessage(ref: string): string {
@@ -27,15 +40,19 @@ export function retryMessage(ref: string): string {
     ? ` If it keeps failing, email us at ${publicContactEmail} instead.`
     : " If it keeps failing, please copy your message somewhere safe and try again later.";
   return (
-    "We couldn't send your inquiry, and it hasn't been saved anywhere. " +
-    "Your details are still in the form. Please wait a minute and press send again." +
+    "We couldn't confirm that your inquiry was delivered, so please treat it as not sent. " +
+    "This website doesn't keep a copy, and your details are still in the form. " +
+    "Please wait a minute and press send again." +
     fallback +
     ` Reference: ${ref}.`
   );
 }
 
 export const PREVIEW_MESSAGE =
-  "This form is in preview mode, so your inquiry was not sent to anyone and has not been saved. Your details are still in the form. If you'd like to keep what you wrote, copy it before leaving this page.";
+  "This form is in preview mode, so your inquiry was not sent to anyone, and this website did not store it. Your details are still in the form. If you'd like to keep what you wrote, copy it before leaving this page.";
+
+export const TOO_FAST_MESSAGE =
+  "That was quicker than we expected, so we didn't send it. Please check your details and press send again.";
 
 /**
  * All inquiry logic, independent of Next.js request APIs so it can be tested
@@ -56,10 +73,21 @@ export async function handleInquiry(
   const startedAt = Number(formData.get("startedAt"));
   const tooFast = Number.isFinite(startedAt) && startedAt > 0 && now - startedAt < MIN_FILL_MS;
 
-  if ((typeof honeypot === "string" && honeypot.length > 0) || tooFast) {
-    logInquiryEvent("warn", "dropped_spam", { honeypot: Boolean(honeypot), tooFast });
-    // Look like success so automated senders get no signal.
-    return { status: "sent", message: "Thanks. Your inquiry has been received." };
+  const isPreview = getLeadDeliveryMode() === "preview";
+
+  if (typeof honeypot === "string" && honeypot.length > 0) {
+    logInquiryEvent("warn", "dropped_spam", { reason: "honeypot" });
+    // Look like a normal outcome so automated senders get no signal. In preview
+    // mode that outcome is the preview notice, so nobody is told it was delivered.
+    return isPreview
+      ? { status: "preview", message: PREVIEW_MESSAGE }
+      : { status: "sent", message: "Thanks. Your inquiry has been received." };
+  }
+
+  if (tooFast) {
+    // A fast human (pasted text, autofill) must not lose a real lead silently.
+    logInquiryEvent("warn", "rejected_too_fast", {});
+    return { status: "error", message: TOO_FAST_MESSAGE };
   }
 
   // Anti-spam 3: per-IP rate limit.
@@ -83,7 +111,7 @@ export async function handleInquiry(
   }
 
   const ref = (ctx.makeRef ?? defaultRef)();
-  const sourcePath = String(formData.get("sourcePath") ?? "").slice(0, 100) || "/";
+  const sourcePath = sanitizeSourcePath(formData.get("sourcePath"));
   const result = await deliverLead({
     ...fields,
     website: normalizeWebsite(fields.website),

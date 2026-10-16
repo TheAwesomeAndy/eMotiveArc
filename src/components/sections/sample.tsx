@@ -34,7 +34,7 @@ export function Sample() {
                   <span className="italic">{sampleAudit.character}.</span>
                 </>
               }
-              lede="Our sample report shows the audit format on one example character. It's the quickest way to see what you'd receive."
+              lede="Our sample report shows the audit format on an invented character from an invented company. It's the quickest way to see what you'd receive."
             />
             <p className="mt-8 font-mono text-[0.7rem] tracking-[0.14em] text-faint uppercase">
               Every audit report covers
@@ -60,7 +60,6 @@ export function Sample() {
           </div>
 
           <Reveal className="space-y-5">
-            <SampleExcerpt />
             <div className="flex gap-4 rounded-3xl border border-line bg-paper p-6 text-[0.9rem] leading-relaxed text-muted">
               <Info className="mt-0.5 size-5 shrink-0 text-arc" aria-hidden />
               <div>
@@ -71,6 +70,7 @@ export function Sample() {
                 </p>
               </div>
             </div>
+            <SampleExcerpt />
           </Reveal>
         </div>
       </Container>

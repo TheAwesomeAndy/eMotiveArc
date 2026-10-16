@@ -91,11 +91,10 @@ export function Audit() {
           <div>
             <h3 className="font-display text-xl text-ink">What we&apos;ll need from you</h3>
             <p className="mt-3 leading-relaxed text-muted">
-              A description of the character, the experiences that matter in your product, and a
-              way for us to hold conversations with it. That might be a test build, a sandbox
-              account, or another method you prefer. We agree on access during scoping. Please
-              don&apos;t send credentials, private transcripts, or system prompts through this
-              website.
+              At kickoff, the character&apos;s system prompt and model access, or you can run our
+              scenario scripts yourself, plus your main concerns. We agree a secure way to share
+              access during scoping. Please don&apos;t send credentials, private transcripts, or
+              system prompts through this website.
             </p>
           </div>
           <div>

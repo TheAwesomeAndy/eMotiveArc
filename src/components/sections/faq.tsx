@@ -14,7 +14,7 @@ const faqs: { q: string; a: React.ReactNode }[] = [
   },
   {
     q: "Do you need our system prompt or model access keys?",
-    a: "Not through this website, ever. During scoping we agree on how we'll converse with your character, for example through a test build or sandbox account you control. We test behavior through conversation, so we don't ask for your internal prompts.",
+    a: "Never through this website. For the audit itself, we normally work from your character's system prompt and model access, shared through a secure method we agree during scoping, so we test the character exactly as configured. If you'd rather not share them, you can run our scenario scripts yourself.",
   },
   {
     q: "Which models or frameworks do you work with?",

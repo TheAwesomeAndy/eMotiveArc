@@ -8,7 +8,12 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, test } from "node:test";
 import { SECRET_ERROR } from "../src/lib/inquiry.ts";
-import { handleInquiry, PREVIEW_MESSAGE } from "../src/lib/inquiry-handler.ts";
+import {
+  handleInquiry,
+  PREVIEW_MESSAGE,
+  sanitizeSourcePath,
+  TOO_FAST_MESSAGE,
+} from "../src/lib/inquiry-handler.ts";
 
 const PII = {
   name: "Priya Example",
@@ -77,7 +82,7 @@ test("preview mode: nothing is sent, visitor is warned, logs hold no content", a
   assert.equal(state.status, "preview");
   assert.equal(state.status === "preview" && state.message, PREVIEW_MESSAGE);
   assert.match(PREVIEW_MESSAGE, /not sent to anyone/);
-  assert.match(PREVIEW_MESSAGE, /has not been saved/);
+  assert.match(PREVIEW_MESSAGE, /did not store it/);
   assert.equal(calls.length, 0, "no network call in preview mode");
   assert.ok(logs.some((l) => l.includes('"event":"not_delivered_preview"')));
   assert.ok(logs.some((l) => l.includes('"ref":"TESTREF1"')));
@@ -119,8 +124,10 @@ test("failed delivery (HTTP 500): clear retry instructions, no content in logs",
   const state = await handleInquiry(form(), ctx());
   assert.equal(state.status, "error");
   const msg = state.status === "error" ? state.message : "";
-  assert.match(msg, /couldn't send/);
-  assert.match(msg, /hasn't been saved anywhere/);
+  assert.match(msg, /couldn't confirm that your inquiry was delivered/);
+  assert.match(msg, /treat it as not sent/);
+  assert.match(msg, /This website doesn't keep a copy/);
+  assert.ok(!/saved anywhere/.test(msg), "must not claim a provider kept nothing");
   assert.match(msg, /still in the form/);
   assert.match(msg, /press send again/);
   assert.match(msg, /Reference: TESTREF1/);
@@ -167,15 +174,58 @@ test("credential rejected in preview mode as well", async () => {
   assertLogsClean([key]);
 });
 
-test("honeypot and too-fast submissions are dropped without delivery", async () => {
+test("honeypot with delivery configured: fake success, nothing delivered", async () => {
   process.env.CONTACT_WEBHOOK_URL = "https://hooks.example/inquiry";
-  const c = ctx();
-  const bot = await handleInquiry(form({ fax_number: "x" }), c);
+  const bot = await handleInquiry(form({ fax_number: "x" }), ctx());
   assert.equal(bot.status, "sent");
-  const fast = await handleInquiry(form({ startedAt: String(c.now - 500) }), ctx());
-  assert.equal(fast.status, "sent");
   assert.equal(calls.length, 0);
   assertLogsClean();
+});
+
+test("honeypot in preview mode never claims delivery", async () => {
+  const bot = await handleInquiry(form({ fax_number: "x" }), ctx());
+  assert.equal(bot.status, "preview");
+  assert.equal(bot.status === "preview" && bot.message, PREVIEW_MESSAGE);
+});
+
+test("too-fast submission asks the visitor to retry instead of dropping silently", async () => {
+  process.env.CONTACT_WEBHOOK_URL = "https://hooks.example/inquiry";
+  const c = ctx();
+  const fast = await handleInquiry(form({ startedAt: String(c.now - 500) }), c);
+  assert.equal(fast.status, "error");
+  assert.equal(fast.status === "error" && fast.message, TOO_FAST_MESSAGE);
+  assert.equal(calls.length, 0);
+  assertLogsClean();
+});
+
+test("sourcePath is allowlisted before logging and delivery", async () => {
+  assert.equal(sanitizeSourcePath("/"), "/");
+  assert.equal(sanitizeSourcePath("/contact"), "/contact");
+  assert.equal(sanitizeSourcePath("/sample-report"), "/sample-report");
+  for (const bad of [
+    "/contact?x=1",
+    "/contact\n{\"event\":\"forged\"}",
+    "javascript:alert(1)",
+    "https://evil.example/",
+    "x".repeat(5000),
+    "",
+  ]) {
+    assert.equal(sanitizeSourcePath(bad), "other", bad.slice(0, 40));
+  }
+  assert.equal(sanitizeSourcePath(null), "other");
+});
+
+test("forged sourcePath never reaches logs or the delivered payload", async () => {
+  process.env.CONTACT_WEBHOOK_URL = "https://hooks.example/inquiry";
+  const forged = '/contact"}\n{"event":"forged","admin":true}';
+  const state = await handleInquiry(form({ sourcePath: forged }), ctx());
+  assert.equal(state.status, "sent");
+  const body = JSON.parse(String(calls[0].init.body));
+  assert.equal(body.lead.sourcePath, "other");
+  assert.ok(!logs.join("\n").includes("forged"), "forged text logged");
+  assert.ok(logs.some((l) => l.includes('"sourcePath":"other"') || l.includes('"event":"delivered"')));
+  // Every log line is a single valid JSON object (no injected lines).
+  for (const line of logs) assert.doesNotThrow(() => JSON.parse(line), line);
 });
 
 test("rate limit: sixth submission from one IP in ten minutes is refused", async () => {

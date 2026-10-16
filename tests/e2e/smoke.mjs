@@ -5,6 +5,8 @@
  *   npm run test:e2e                # in another
  *
  * Env: BASE_URL (default http://localhost:3000)
+ *      E2E_BASIC_AUTH ("user:password" for a staging preview protected by
+ *      STAGING_ACCESS_PASSWORD; also checks that anonymous access is refused)
  *      CHROMIUM_PATH (path to a Chromium/Chrome binary; optional if
  *      Playwright's own browser is installed)
  */
@@ -26,13 +28,27 @@ const browser = await chromium.launch(
   process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
 );
 
+const auth = process.env.E2E_BASIC_AUTH;
+const httpCredentials = auth
+  ? { username: auth.slice(0, auth.indexOf(":")), password: auth.slice(auth.indexOf(":") + 1) }
+  : undefined;
+const newContext = (opts = {}) => browser.newContext({ ...opts, httpCredentials });
+const newPage = async (opts = {}) => (await newContext(opts)).newPage();
+
+if (auth) {
+  const anon = await fetch(BASE + "/");
+  check(anon.status === 401, `anonymous request is refused by the access gate (${anon.status})`);
+  const anonPdf = await fetch(BASE + "/robots.txt");
+  check(anonPdf.status === 401, `anonymous asset request is refused (${anonPdf.status})`);
+}
+
 // 1. Every page loads, has one h1, a title, a description, no console errors,
 //    no horizontal overflow, and no serious axe violations.
 for (const vp of [
   { name: "desktop", width: 1440, height: 900 },
   { name: "mobile", width: 390, height: 844 },
 ]) {
-  const ctx = await browser.newContext({ viewport: vp });
+  const ctx = await newContext({ viewport: vp });
   const page = await ctx.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
@@ -62,7 +78,7 @@ for (const vp of [
 
 // 2. Internal links and in-page anchors resolve.
 {
-  const page = await browser.newPage();
+  const page = await newPage();
   await page.goto(BASE + "/", { waitUntil: "networkidle" });
   const hrefs = await page.$$eval("a[href]", (as) => [...new Set(as.map((a) => a.getAttribute("href")))]);
   for (const href of hrefs.filter((h) => h.startsWith("/"))) {
@@ -81,9 +97,37 @@ for (const vp of [
   await page.close();
 }
 
+// 2b. Approved sample assets: both PDFs download, F01 excerpt and disclosure render.
+{
+  const page = await newPage();
+  for (const f of [
+    "/sample/emotivearc-sample-audit-captain-ivy-marlow.pdf",
+    "/sample/emotivearc-audit-overview.pdf",
+  ]) {
+    const res = await page.request.get(BASE + f);
+    const type = res.headers()["content-type"] ?? "";
+    const head = (await res.body()).subarray(0, 5).toString();
+    check(res.status() === 200 && type.includes("application/pdf") && head === "%PDF-", `${f} serves a PDF`);
+  }
+  for (const path of ["/", "/sample-report"]) {
+    await page.goto(BASE + path, { waitUntil: "networkidle" });
+    check(await page.getByText("Accepts a new request, then reverts to the old rule").first().isVisible(), `${path} shows the F01 excerpt`);
+    check(
+      await page.getByText("An AI assistant reviewed the flagged conversations, not an independent human").first().isVisible(),
+      `${path} shows the AI-review disclosure`,
+    );
+    check((await page.getByText("Placeholder: ").count()) === 0, `${path} has no sample placeholders`);
+    check(
+      (await page.locator('a[href$="emotivearc-sample-audit-captain-ivy-marlow.pdf"]').count()) > 0,
+      `${path} links the full sample report`,
+    );
+  }
+  await page.close();
+}
+
 // 3. Mobile menu opens, traps nothing unexpected, and closes on Escape.
 {
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const ctx = await newContext({ viewport: { width: 390, height: 844 } });
   const page = await ctx.newPage();
   await page.goto(BASE + "/", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Open menu" }).click();
@@ -95,7 +139,7 @@ for (const vp of [
 
 // 4. Inquiry form: client validation, ?next= preselection, preview/sent outcome.
 {
-  const page = await browser.newPage();
+  const page = await newPage();
   await page.goto(BASE + "/contact?next=discovery", { waitUntil: "networkidle" });
   const previewBanner = await page.getByText("Preview mode.", { exact: false }).count();
   console.log(`INFO  delivery banner present: ${previewBanner > 0} (expected only when no provider is configured)`);
@@ -135,7 +179,7 @@ for (const vp of [
 
 // 4b. A pasted credential is blocked in the browser and never submitted.
 {
-  const page = await browser.newPage();
+  const page = await newPage();
   let actionPosts = 0;
   page.on("request", (r) => r.method() === "POST" && actionPosts++);
   await page.goto(BASE + "/contact", { waitUntil: "networkidle" });
@@ -156,9 +200,9 @@ for (const vp of [
   await page.close();
 }
 
-// 5. Honeypot submissions are not delivered (server returns fake success).
+// 5. Honeypot submissions are never delivered.
 {
-  const page = await browser.newPage();
+  const page = await newPage();
   await page.goto(BASE + "/contact", { waitUntil: "networkidle" });
   await page.evaluate(() => {
     const hp = document.querySelector('input[name="fax_number"]');
@@ -169,8 +213,16 @@ for (const vp of [
   await page.fill('textarea[name="message"]', "Buy cheap things now, lots of them, today only.");
   await page.waitForTimeout(3200);
   await page.getByRole("button", { name: /Send audit inquiry/ }).click();
-  await page.locator("main [role=status]").waitFor({ timeout: 15000 });
-  check(true, "honeypot submission gets a silent fake success");
+  const hpOutcome = page.locator("main [role=alert], main [role=status]").filter({ hasText: /\w/ }).first();
+  await hpOutcome.waitFor({ timeout: 15000 });
+  const hpText = await hpOutcome.innerText();
+  const hpPreview = (await page.getByText("Preview mode.", { exact: false }).count()) > 0 || /preview mode/.test(hpText);
+  check(
+    hpPreview ? /preview mode/.test(hpText) && !/received/i.test(hpText) : /received/.test(hpText),
+    hpPreview
+      ? "honeypot in preview mode shows the preview notice, never 'received'"
+      : "honeypot with delivery configured gets a silent fake success",
+  );
   await page.close();
 }
 
